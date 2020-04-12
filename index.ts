@@ -262,9 +262,9 @@ const roundCrossCountryCupScore: RoundScoreFunc = (score: number): number => {
 // https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/Sportreglement_D_CCC_2020.pdf
 export function scoreCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>,
-    distanceFunc: DistanceFunc,
+    distanceKMFunc: DistanceFunc,
 }): FinalScore | null {
-    const { coords, distanceFunc } = config;
+    const { coords, distanceKMFunc } = config;
 
     if (coords.length < 2) {
         return {
@@ -277,7 +277,7 @@ export function scoreCrossCountryCup(config: {
     }
 
     if (coords.length === 2) {
-        const distance = distanceFunc(coords[0], coords[1]);
+        const distance = distanceKMFunc(coords[0], coords[1]);
         return {
             distance,
             flightType: FlightType.StraightDistance,
@@ -289,8 +289,8 @@ export function scoreCrossCountryCup(config: {
 
     const paddedCoords = padCoords(coords, 5);
     const distanceMatrix = new DistanceMatrix({
-        distanceFunc,
         coords: paddedCoords,
+        distanceFunc: distanceKMFunc,
     });
     const intermediateScores = [
         scoreStraightDistance({
@@ -338,9 +338,9 @@ const roundXContestScore: RoundScoreFunc = (score: number): number => {
 // XContest rules. See: https://www.xcontest.org/world/en/rules/.
 export function scoreWorldXContest(config: {
     coords: ReadonlyArray<Coord>,
-    distanceFunc: DistanceFunc,
+    distanceKMFunc: DistanceFunc,
 }): FinalScore | null {
-    const { coords, distanceFunc } = config;
+    const { coords, distanceKMFunc } = config;
 
     if (coords.length < 2) {
         return {
@@ -353,7 +353,7 @@ export function scoreWorldXContest(config: {
     }
 
     if (coords.length === 2) {
-        const distance = distanceFunc(coords[0], coords[1]);
+        const distance = distanceKMFunc(coords[0], coords[1]);
         return {
             distance,
             flightType: FlightType.OpenDistance,
@@ -365,8 +365,8 @@ export function scoreWorldXContest(config: {
 
     const paddedCoords = padCoords(coords, 5);
     const distanceMatrix = new DistanceMatrix({
-        distanceFunc,
         coords: paddedCoords,
+        distanceFunc: distanceKMFunc,
     });
     const intermediateScores = [
         scoreDistanceViaThreeTurnpoints({

@@ -31,11 +31,11 @@ export declare class DistanceMatrix {
 export declare let cartesianDistance: DistanceFunc;
 export declare function scoreCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>;
-    distanceFunc: DistanceFunc;
+    distanceKMFunc: DistanceFunc;
 }): FinalScore | null;
 export declare function scoreWorldXContest(config: {
     coords: ReadonlyArray<Coord>;
-    distanceFunc: DistanceFunc;
+    distanceKMFunc: DistanceFunc;
 }): FinalScore | null;
 export {};
 //# sourceMappingURL=index.d.ts.map

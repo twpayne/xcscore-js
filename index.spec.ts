@@ -67,7 +67,7 @@ describe("scoreCrossCountryCup", () => {
     test("no coords, none", () => {
         const score = scoreCrossCountryCup({
             coords: [],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "none",
@@ -83,7 +83,7 @@ describe("scoreCrossCountryCup", () => {
             coords: [
                 [0, 0],
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "none",
@@ -100,7 +100,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [0, 1],
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "straightDistance",
@@ -121,7 +121,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 1],
                 [0, 2],
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "straightDistance",
@@ -142,7 +142,7 @@ describe("scoreCrossCountryCup", () => {
                 [3, 0],
                 [1, 0],
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "flatTriangle",
@@ -167,7 +167,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 2],
                 [0, 3,]
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "straightDistance",
@@ -189,7 +189,7 @@ describe("scoreCrossCountryCup", () => {
                 [6, 0],
                 [9, 4]
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "freeDistance",
@@ -214,7 +214,7 @@ describe("scoreCrossCountryCup", () => {
                 [3, 0],
                 [2, 0]
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "flatTriangle",
@@ -239,7 +239,7 @@ describe("scoreCrossCountryCup", () => {
                 [4, 0],
                 [3, 0]
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "freeDistance",
@@ -264,7 +264,7 @@ describe("scoreCrossCountryCup", () => {
                 [6, 0],
                 [1, 0]
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "faiTriangle",
@@ -289,7 +289,7 @@ describe("scoreCrossCountryCup", () => {
                 [6, 0],
                 [3, 0]
             ],
-            distanceFunc: cartesianDistance,
+            distanceKMFunc: cartesianDistance,
         });
         expect(score).toStrictEqual({
             flightType: "freeDistance",
