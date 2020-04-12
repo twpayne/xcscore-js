@@ -7,14 +7,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // roundCrossCountryCupScore rounds score according to the SHV's Cross Country
 // Cup rules.
-var roundCrossCountryCupScore = function (score) {
+const roundCrossCountryCupScore = (score) => {
     return Math.round(10000 * score) / 10000;
 };
 // scoreCrossCountryCup scores coords using distanceFunc and the SHV's Cross
 // Country Cup 2020 rules.
 function scoreCrossCountryCup(config) {
-    var coords = config.coords;
-    var distanceFunc = config.distanceFunc;
+    const coords = config.coords;
+    const distanceFunc = config.distanceFunc;
     if (coords.length < 2) {
         return {
             flightType: FlightType.None,
@@ -25,33 +25,33 @@ function scoreCrossCountryCup(config) {
         };
     }
     if (coords.length === 2) {
-        var distance = distanceFunc(coords[0], coords[1]);
+        const distance = distanceFunc(coords[0], coords[1]);
         return {
-            distance: distance,
+            distance,
             flightType: FlightType.FreeDistance,
             multiplier: 1.2,
             score: roundCrossCountryCupScore(distance * 1.2),
             coords: [coords[0], coords[1]],
         };
     }
-    var paddedCoords = padCoords(coords, 5);
-    var distanceMatrix = new DistanceMatrix(paddedCoords, distanceFunc);
-    var intermediateScores = [
+    const paddedCoords = padCoords(coords, 5);
+    const distanceMatrix = new DistanceMatrix(paddedCoords, distanceFunc);
+    const intermediateScores = [
         scoreStraightDistance({
-            distanceMatrix: distanceMatrix,
+            distanceMatrix,
         }),
         scoreDistanceViaThreeTurnpoints({
-            distanceMatrix: distanceMatrix,
+            distanceMatrix,
             flightType: FlightType.FreeDistance,
         }),
         scoreTriangles({
-            distanceMatrix: distanceMatrix,
-            triangleTypeFunc: function (totalDistance, shortestLegDistance, closingLegDistance) {
-                var isTriangle = closingLegDistance <= 0.2 * totalDistance;
+            distanceMatrix,
+            triangleTypeFunc(totalDistance, shortestLegDistance, closingLegDistance) {
+                const isTriangle = closingLegDistance <= 0.2 * totalDistance;
                 if (!isTriangle) {
                     return null;
                 }
-                var isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                const isFAI = shortestLegDistance >= 0.28 * totalDistance;
                 if (isFAI) {
                     return {
                         flightType: FlightType.FAITriangle,
@@ -66,7 +66,7 @@ function scoreCrossCountryCup(config) {
         }),
     ];
     return bestScore({
-        intermediateScores: intermediateScores,
+        intermediateScores,
         coords: paddedCoords,
         roundScoreFunc: roundCrossCountryCupScore,
     });

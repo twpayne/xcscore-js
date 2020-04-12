@@ -8,10 +8,11 @@
         "sourceMap": true,
         "strict": true,
         "stripInternal": true,
-        "target": "ES5"
+        "target": "ES6"
     },
     "include": [
-        "src"
+        "src",
+        "tests"
     ],
     "exclude": [
         "node_modules",

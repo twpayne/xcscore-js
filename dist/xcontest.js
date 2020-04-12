@@ -2,14 +2,14 @@
 // See: https://www.xcontest.org/world/en/rules/
 Object.defineProperty(exports, "__esModule", { value: true });
 // roundXContestScore rounds score according to the 2020 World XContest rules.
-var roundXContestScore = function (score) {
+const roundXContestScore = (score) => {
     return Math.round(100 * score) / 100;
 };
 // scoreWorldXContest scores coords using distanceFunc and the 2020 World
 // XContest rules.
 function scoreWorldXContest(config) {
-    var coords = config.coords;
-    var distanceFunc = config.distanceFunc;
+    const coords = config.coords;
+    const distanceFunc = config.distanceFunc;
     if (coords.length < 2) {
         return {
             flightType: FlightType.None,
@@ -20,31 +20,31 @@ function scoreWorldXContest(config) {
         };
     }
     if (coords.length === 2) {
-        var distance = distanceFunc(coords[0], coords[1]);
+        const distance = distanceFunc(coords[0], coords[1]);
         return {
-            distance: distance,
+            distance,
             flightType: FlightType.OpenDistance,
             multiplier: 1,
             score: roundXContestScore(distance),
             coords: [coords[0], coords[1]],
         };
     }
-    var paddedCoords = padCoords(coords, 5);
-    var distanceMatrix = new DistanceMatrix(paddedCoords, distanceFunc);
-    var intermediateScores = [
+    const paddedCoords = padCoords(coords, 5);
+    const distanceMatrix = new DistanceMatrix(paddedCoords, distanceFunc);
+    const intermediateScores = [
         scoreDistanceViaThreeTurnpoints({
-            distanceMatrix: distanceMatrix,
+            distanceMatrix,
             flightType: FlightType.OpenDistance,
         }),
         scoreTriangles({
-            distanceMatrix: distanceMatrix,
-            triangleTypeFunc: function (totalDistance, shortestLegDistance, closingLegDistance) {
-                var isTriangle = closingLegDistance <= 0.2 * totalDistance;
+            distanceMatrix,
+            triangleTypeFunc(totalDistance, shortestLegDistance, closingLegDistance) {
+                const isTriangle = closingLegDistance <= 0.2 * totalDistance;
                 if (!isTriangle) {
                     return null;
                 }
-                var isClosed = closingLegDistance <= 0.05 * totalDistance;
-                var isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                const isClosed = closingLegDistance <= 0.05 * totalDistance;
+                const isFAI = shortestLegDistance >= 0.28 * totalDistance;
                 if (isClosed && isFAI) {
                     return {
                         flightType: FlightType.ClosedFAITriangle,
@@ -71,7 +71,7 @@ function scoreWorldXContest(config) {
         }),
     ];
     return bestScore({
-        intermediateScores: intermediateScores,
+        intermediateScores,
         coords: paddedCoords,
         roundScoreFunc: roundXContestScore,
     });

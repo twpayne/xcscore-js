@@ -3,7 +3,7 @@ type CartesianCoord = [number, number];
 
 // cartesianDistance returns the Cartesian distance between coord1 and coord2
 // using the Pythagorean theorem.
-let cartesianDistance: DistanceFunc = (
+export let cartesianDistance: DistanceFunc = (
     coord1: CartesianCoord,
     coord2: CartesianCoord,
 ): number => {

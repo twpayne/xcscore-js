@@ -1,3 +1,2 @@
-declare type CartesianCoord = [number, number];
-declare let cartesianDistance: DistanceFunc;
+export declare let cartesianDistance: DistanceFunc;
 //# sourceMappingURL=cartesian.d.ts.map
