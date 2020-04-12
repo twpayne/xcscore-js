@@ -1,5 +1,5 @@
 // A FlightType is a type of flight.
-enum FlightType {
+const enum FlightType {
     None = "none",
     ClosedFAITriangle = "closedFAITriangle",
     ClosedFlatTriangle = "closedFlatTriangle",
@@ -22,8 +22,8 @@ interface ScoreComponents {
     multiplier: number,
 }
 
-// score is a convenience function that returns scoreComponents's score.
-function score(scoreComponents: ScoreComponents): number {
+// getScore is a convenience function that returns scoreComponents's score.
+function getScore(scoreComponents: ScoreComponents): number {
     return scoreComponents.distance * scoreComponents.multiplier;
 }
 
@@ -44,11 +44,15 @@ interface FinalScore extends ScoreComponents {
 }
 
 // A DistanceMatrix is a symmetric matrix storing distances between Coords.
-class DistanceMatrix {
+export class DistanceMatrix {
     readonly n: number;
-    private readonly distances: ReadonlyArray<number>;
+    readonly distances: ReadonlyArray<number>;
 
-    constructor(coords: ReadonlyArray<Coord>, distanceFunc: DistanceFunc) {
+    constructor(config: {
+        coords: ReadonlyArray<Coord>,
+        distanceFunc: DistanceFunc,
+    }) {
+        const { coords, distanceFunc } = config;
         this.n = coords.length;
         const distances: number[] = new Array(this.n * (this.n - 1) / 2);
         let k = 0;
@@ -61,6 +65,9 @@ class DistanceMatrix {
     }
 
     distanceBetween(i: number, j: number): number {
+        if (i === j) {
+            return 0;
+        }
         return this.distances[i + j * (j - 1) / 2];
     }
 }
@@ -92,7 +99,7 @@ function scoreStraightDistance(config: {
     distanceMatrix: DistanceMatrix,
 }): IntermediateScore {
     const n = config.distanceMatrix.n;
-    const distanceBetween = config.distanceMatrix.distanceBetween;
+    const distanceBetween = config.distanceMatrix.distanceBetween.bind(config.distanceMatrix);
     let bestDistance = -Infinity;
     let bestCoordIndexes: ReadonlyArray<number> = [];
     for (let a = 0; a < n-1; ++a) {
@@ -120,7 +127,7 @@ function scoreDistanceViaThreeTurnpoints(config: {
     distanceMatrix: DistanceMatrix,
 }): IntermediateScore {
     const n = config.distanceMatrix.n;
-    const distanceBetween = config.distanceMatrix.distanceBetween;
+    const distanceBetween = config.distanceMatrix.distanceBetween.bind(config.distanceMatrix);
     let bestDistance = -Infinity;
     let bestCoordIndexes: ReadonlyArray<number> = [];
     for (let a = 0; a < n-4; ++a) {
@@ -165,7 +172,7 @@ function scoreTriangles(config: {
     triangleTypeFunc: TriangleTypeFunc,
 }): IntermediateScore | null {
     const n = config.distanceMatrix.n;
-    const distanceBetween = config.distanceMatrix.distanceBetween;
+    const distanceBetween = config.distanceMatrix.distanceBetween.bind(config.distanceMatrix);
     const triangleTypeFunc = config.triangleTypeFunc;
     let bestIntermediateScore: IntermediateScore | null = null;
     for (let a = 0; a < n-3; ++a) {
@@ -184,7 +191,7 @@ function scoreTriangles(config: {
                         if (!triangleType) {
                             continue;
                         }
-                        if (bestIntermediateScore && totalDistance * triangleType.multiplier <= score(bestIntermediateScore)) {
+                        if (bestIntermediateScore && totalDistance * triangleType.multiplier <= getScore(bestIntermediateScore)) {
                             continue;
                         }
                         bestIntermediateScore = {
@@ -213,7 +220,7 @@ function bestScore(config: {
         if (!intermediateScore) {
             continue;
         }
-        if (!bestIntermediateScore || score(intermediateScore) > score(bestIntermediateScore)) {
+        if (!bestIntermediateScore || getScore(intermediateScore) > getScore(bestIntermediateScore)) {
             bestIntermediateScore = intermediateScore;
         }
     }
@@ -224,7 +231,186 @@ function bestScore(config: {
         flightType: bestIntermediateScore.flightType,
         distance: bestIntermediateScore.distance,
         multiplier: bestIntermediateScore.multiplier,
-        score: config.roundScoreFunc(score(bestIntermediateScore)),
+        score: config.roundScoreFunc(getScore(bestIntermediateScore)),
         coords: bestIntermediateScore.coordIndexes.map(i => config.coords[i]),
     };
+}
+
+// A CartesianCoord is Cartesian coordinate.
+type CartesianCoord = [number, number];
+
+// cartesianDistance returns the Cartesian distance between coord1 and coord2
+// using the Pythagorean theorem.
+export let cartesianDistance: DistanceFunc = (
+    coord1: CartesianCoord,
+    coord2: CartesianCoord,
+): number => {
+    const deltaX = coord1[0]-coord2[0];
+    const deltaY = coord1[1]-coord2[1];
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+}
+
+// roundCrossCountryCupScore rounds score according to the SHV's Cross Country
+// Cup rules.
+const roundCrossCountryCupScore: RoundScoreFunc = (score: number): number => {
+    return Math.round(10000*score)/10000;
+}
+
+// scoreCrossCountryCup scores coords using distanceFunc and the SHV's Cross
+// Country Cup 2020 rules. See: https://www.xcontest.org/switzerland/en/rules/.
+// https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/ReglementSportif_D_CCC_2020.pdf
+// https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/Sportreglement_D_CCC_2020.pdf
+export function scoreCrossCountryCup(config: {
+    coords: ReadonlyArray<Coord>,
+    distanceFunc: DistanceFunc,
+}): FinalScore | null {
+    const { coords, distanceFunc } = config;
+
+    if (coords.length < 2) {
+        return {
+            flightType: FlightType.None,
+            distance: 0,
+            multiplier: 0,
+            score: 0,
+            coords: [],
+        };
+    }
+
+    if (coords.length === 2) {
+        const distance = distanceFunc(coords[0], coords[1]);
+        return {
+            distance,
+            flightType: FlightType.StraightDistance,
+            multiplier: 1.2,
+            score: roundCrossCountryCupScore(distance * 1.2),
+            coords: [coords[0], coords[1]],
+        };
+    }
+
+    const paddedCoords = padCoords(coords, 5);
+    const distanceMatrix = new DistanceMatrix({
+        distanceFunc,
+        coords: paddedCoords,
+    });
+    const intermediateScores = [
+        scoreStraightDistance({
+            distanceMatrix,
+        }),
+        scoreDistanceViaThreeTurnpoints({
+            distanceMatrix,
+            flightType: FlightType.FreeDistance,
+        }),
+        scoreTriangles({
+            distanceMatrix,
+            triangleTypeFunc(totalDistance: number, shortestLegDistance: number, closingLegDistance: number): TriangleType {
+                const isTriangle = closingLegDistance <= 0.2 * totalDistance;
+                if (!isTriangle) {
+                    return null;
+                }
+                const isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                if (isFAI) {
+                    return {
+                        flightType: FlightType.FAITriangle,
+                        multiplier: 1.3,
+                    };
+                }
+                return {
+                    flightType: FlightType.FlatTriangle,
+                    multiplier: 1.2,
+                };
+            },
+        }),
+    ];
+
+    return bestScore({
+        intermediateScores,
+        coords: paddedCoords,
+        roundScoreFunc: roundCrossCountryCupScore,
+    });
+}
+
+// roundXContestScore rounds score according to the 2020 World XContest rules.
+const roundXContestScore: RoundScoreFunc = (score: number): number => {
+    return Math.round(100*score)/100
+}
+
+// scoreWorldXContest scores coords using distanceFunc and the 2020 World
+// XContest rules. See: https://www.xcontest.org/world/en/rules/.
+export function scoreWorldXContest(config: {
+    coords: ReadonlyArray<Coord>,
+    distanceFunc: DistanceFunc,
+}): FinalScore | null {
+    const { coords, distanceFunc } = config;
+
+    if (coords.length < 2) {
+        return {
+            flightType: FlightType.None,
+            distance: 0,
+            multiplier: 0,
+            score: 0,
+            coords: [],
+        };
+    }
+
+    if (coords.length === 2) {
+        const distance = distanceFunc(coords[0], coords[1]);
+        return {
+            distance,
+            flightType: FlightType.OpenDistance,
+            multiplier: 1,
+            score: roundXContestScore(distance),
+            coords: [coords[0], coords[1]],
+        }
+    }
+
+    const paddedCoords = padCoords(coords, 5);
+    const distanceMatrix = new DistanceMatrix({
+        distanceFunc,
+        coords: paddedCoords,
+    });
+    const intermediateScores = [
+        scoreDistanceViaThreeTurnpoints({
+            distanceMatrix,
+            flightType: FlightType.OpenDistance,
+        }),
+        scoreTriangles({
+            distanceMatrix,
+            triangleTypeFunc(totalDistance: number, shortestLegDistance: number, closingLegDistance: number): TriangleType {
+                const isTriangle = closingLegDistance <= 0.2 * totalDistance;
+                if (!isTriangle) {
+                    return null;
+                }
+                const isClosed = closingLegDistance <= 0.05 * totalDistance
+                const isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                if (isClosed && isFAI) {
+                    return {
+                        flightType: FlightType.ClosedFAITriangle,
+                        multiplier: 1.6,
+                    };
+                }
+                if (isClosed) {
+                    return {
+                        flightType: FlightType.ClosedFlatTriangle,
+                        multiplier: 1.4,
+                    };
+                }
+                if (isFAI) {
+                    return {
+                        flightType: FlightType.FAITriangle,
+                        multiplier: 1.4,
+                    };
+                }
+                return {
+                    flightType: FlightType.FlatTriangle,
+                    multiplier: 1.2,
+                };
+            },
+        }),
+    ];
+
+    return bestScore({
+        intermediateScores,
+        coords: paddedCoords,
+        roundScoreFunc: roundXContestScore,
+    })
 }

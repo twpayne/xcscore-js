@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Cross country league scoring for paragliding",
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "tslint -c tslint.json -p .",

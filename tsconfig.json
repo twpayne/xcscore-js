@@ -11,8 +11,7 @@
         "target": "ES6"
     },
     "include": [
-        "src",
-        "tests"
+        "index.ts"
     ],
     "exclude": [
         "node_modules",

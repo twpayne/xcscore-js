@@ -8,7 +8,10 @@
   "rules": {
     "const-parameters": true,
     "early-exit": true,
-    "curly": "always",
+    "curly": [
+      true,
+      "always"
+    ],
     "naming-convention": false,
     "no-accessor-recursion": true,
     "no-collapsible-if": true,
