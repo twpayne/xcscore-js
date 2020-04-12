@@ -1,0 +1,34 @@
+{
+  "name": "xcscore",
+  "version": "1.0.0",
+  "description": "Cross country league scoring for paragliding",
+  "main": "dist/index.js",
+  "types": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/twpayne/xcscore-js.git"
+  },
+  "keywords": [
+    "xc",
+    "score",
+    "scoring",
+    "paragliding",
+    "xcontest"
+  ],
+  "author": "Tom Payne <twpayne@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/twpayne/xcscore-js/issues"
+  },
+  "homepage": "https://github.com/twpayne/xcscore-js#readme",
+  "devDependencies": {
+    "tslint": "^6.1.1",
+    "typescript": "^3.8.3"
+  }
+}

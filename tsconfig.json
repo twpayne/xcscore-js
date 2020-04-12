@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "declaration": true,
+        "declarationDir": "dist/types",
+        "declarationMap": true,
+        "module": "commonjs",
+        "outDir": "dist",
+        "sourceMap": true,
+        "strict": true,
+        "stripInternal": true,
+        "target": "ES5"
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+}

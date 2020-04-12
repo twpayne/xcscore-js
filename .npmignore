@@ -1,0 +1,4 @@
+.*
+**/*.spec.ts
+**/tsconfig.json
+lib/
