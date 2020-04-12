@@ -7,7 +7,7 @@
 // roundCrossCountryCupScore rounds score according to the SHV's Cross Country
 // Cup rules.
 const roundCrossCountryCupScore: RoundScoreFunc = (score: number): number => {
-    return Math.round(10000*score)/10000
+    return Math.round(10000*score)/10000;
 }
 
 // scoreCrossCountryCup scores coords using distanceFunc and the SHV's Cross
@@ -37,7 +37,7 @@ export function scoreCrossCountryCup(config: {
             multiplier: 1.2,
             score: roundCrossCountryCupScore(distance * 1.2),
             coords: [coords[0], coords[1]],
-        }
+        };
     }
 
     const paddedCoords = padCoords(coords, 5);
@@ -76,5 +76,5 @@ export function scoreCrossCountryCup(config: {
         coords: paddedCoords,
         intermediateScores,
         roundScoreFunc: roundCrossCountryCupScore,
-    })
+    });
 }

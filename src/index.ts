@@ -54,7 +54,7 @@ class DistanceMatrix {
         let k = 0;
         for (let j = 1; j < this.n; ++j) {
             for (let i = 0; i < j; ++i) {
-                distances[k++] = distanceFunc(coords[i], coords[j])
+                distances[k++] = distanceFunc(coords[i], coords[j]);
             }
         }
         this.distances = distances;
@@ -76,11 +76,11 @@ function padCoords(
     }
     const paddedCoords: Coord[] = [];
     for (const coord of coords) {
-        paddedCoords.push(coord)
+        paddedCoords.push(coord);
     }
     const lastCoord = coords[coords.length-1];
     for (let i = coords.length; i < n; ++i) {
-        paddedCoords.push(lastCoord)
+        paddedCoords.push(lastCoord);
     }
     return paddedCoords;
 }
@@ -109,7 +109,7 @@ function scoreStraightDistance(config: {
         distance: bestDistance,
         multiplier: 1.2,
         coordIndexes: bestCoordIndexes,
-    }
+    };
 }
 
 // scoreDistanceViaThreeTurnpoints returns an IntermediateScore for the
@@ -191,7 +191,7 @@ function scoreTriangles(config: {
                                 distance: totalDistance,
                                 multiplier: triangleType.multiplier,
                                 coordIndexes: [a, b, c, d, e],
-                            }
+                            };
                         }
                     }
                 }
@@ -218,7 +218,7 @@ function bestScore(config: {
         }
     }
     if (!bestIntermediateScore) {
-        return null
+        return null;
     }
     return {
         flightType: bestIntermediateScore.flightType,
@@ -226,5 +226,5 @@ function bestScore(config: {
         multiplier: bestIntermediateScore.multiplier,
         score: config.roundScoreFunc(score(bestIntermediateScore)),
         coords: bestIntermediateScore.coordIndexes.map(i => config.coords[i]),
-    }
+    };
 }
