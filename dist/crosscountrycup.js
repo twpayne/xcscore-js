@@ -27,8 +27,8 @@ function scoreCrossCountryCup(config) {
     if (coords.length === 2) {
         var distance = distanceFunc(coords[0], coords[1]);
         return {
-            flightType: FlightType.FreeDistance,
             distance: distance,
+            flightType: FlightType.FreeDistance,
             multiplier: 1.2,
             score: roundCrossCountryCupScore(distance * 1.2),
             coords: [coords[0], coords[1]],
@@ -41,35 +41,33 @@ function scoreCrossCountryCup(config) {
             distanceMatrix: distanceMatrix,
         }),
         scoreDistanceViaThreeTurnpoints({
-            flightType: FlightType.FreeDistance,
             distanceMatrix: distanceMatrix,
+            flightType: FlightType.FreeDistance,
         }),
         scoreTriangles({
             distanceMatrix: distanceMatrix,
             triangleTypeFunc: function (totalDistance, shortestLegDistance, closingLegDistance) {
-                if (closingLegDistance < 0.2 * totalDistance) {
-                    if (shortestLegDistance >= 0.28 * totalDistance) {
-                        return {
-                            flightType: FlightType.FAITriangle,
-                            multiplier: 1.3,
-                        };
-                    }
-                    else {
-                        return {
-                            flightType: FlightType.FlatTriangle,
-                            multiplier: 1.2,
-                        };
-                    }
-                }
-                else {
+                var isTriangle = closingLegDistance <= 0.2 * totalDistance;
+                if (!isTriangle) {
                     return null;
                 }
+                var isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                if (isFAI) {
+                    return {
+                        flightType: FlightType.FAITriangle,
+                        multiplier: 1.3,
+                    };
+                }
+                return {
+                    flightType: FlightType.FlatTriangle,
+                    multiplier: 1.2,
+                };
             },
         }),
     ];
     return bestScore({
-        coords: paddedCoords,
         intermediateScores: intermediateScores,
+        coords: paddedCoords,
         roundScoreFunc: roundCrossCountryCupScore,
     });
 }

@@ -22,8 +22,8 @@ function scoreWorldXContest(config) {
     if (coords.length === 2) {
         var distance = distanceFunc(coords[0], coords[1]);
         return {
-            flightType: FlightType.OpenDistance,
             distance: distance,
+            flightType: FlightType.OpenDistance,
             multiplier: 1,
             score: roundXContestScore(distance),
             coords: [coords[0], coords[1]],
@@ -33,50 +33,46 @@ function scoreWorldXContest(config) {
     var distanceMatrix = new DistanceMatrix(paddedCoords, distanceFunc);
     var intermediateScores = [
         scoreDistanceViaThreeTurnpoints({
-            flightType: FlightType.OpenDistance,
             distanceMatrix: distanceMatrix,
+            flightType: FlightType.OpenDistance,
         }),
         scoreTriangles({
             distanceMatrix: distanceMatrix,
             triangleTypeFunc: function (totalDistance, shortestLegDistance, closingLegDistance) {
-                var isFAITriangle = shortestLegDistance >= 0.28 * totalDistance;
-                if (closingLegDistance < 0.05 * totalDistance) {
-                    if (isFAITriangle) {
-                        return {
-                            flightType: FlightType.ClosedFAITriangle,
-                            multiplier: 1.6,
-                        };
-                    }
-                    else {
-                        return {
-                            flightType: FlightType.ClosedFlatTriangle,
-                            multiplier: 1.4,
-                        };
-                    }
-                }
-                else if (closingLegDistance < 0.2 * totalDistance) {
-                    if (isFAITriangle) {
-                        return {
-                            flightType: FlightType.FAITriangle,
-                            multiplier: 1.4,
-                        };
-                    }
-                    else {
-                        return {
-                            flightType: FlightType.FlatTriangle,
-                            multiplier: 1.2,
-                        };
-                    }
-                }
-                else {
+                var isTriangle = closingLegDistance <= 0.2 * totalDistance;
+                if (!isTriangle) {
                     return null;
                 }
+                var isClosed = closingLegDistance <= 0.05 * totalDistance;
+                var isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                if (isClosed && isFAI) {
+                    return {
+                        flightType: FlightType.ClosedFAITriangle,
+                        multiplier: 1.6,
+                    };
+                }
+                if (isClosed) {
+                    return {
+                        flightType: FlightType.ClosedFlatTriangle,
+                        multiplier: 1.4,
+                    };
+                }
+                if (isFAI) {
+                    return {
+                        flightType: FlightType.FAITriangle,
+                        multiplier: 1.4,
+                    };
+                }
+                return {
+                    flightType: FlightType.FlatTriangle,
+                    multiplier: 1.2,
+                };
             },
         }),
     ];
     return bestScore({
-        coords: paddedCoords,
         intermediateScores: intermediateScores,
+        coords: paddedCoords,
         roundScoreFunc: roundXContestScore,
     });
 }

@@ -16,4 +16,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - run: git diff --exit-code
+    - uses: mooyoul/tslint-actions@v1.1.1
+      with:
+        pattern: '*.ts'
+        token: ${{ secrets.GITHUB_TOKEN }}
 

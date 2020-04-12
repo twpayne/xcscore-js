@@ -133,15 +133,15 @@ function scoreTriangles(config) {
                         if (!triangleType) {
                             continue;
                         }
-                        if (!bestIntermediateScore ||
-                            totalDistance * triangleType.multiplier > score(bestIntermediateScore)) {
-                            bestIntermediateScore = {
-                                flightType: triangleType.flightType,
-                                distance: totalDistance,
-                                multiplier: triangleType.multiplier,
-                                coordIndexes: [a, b, c, d, e],
-                            };
+                        if (bestIntermediateScore && totalDistance * triangleType.multiplier <= score(bestIntermediateScore)) {
+                            continue;
                         }
+                        bestIntermediateScore = {
+                            flightType: triangleType.flightType,
+                            distance: totalDistance,
+                            multiplier: triangleType.multiplier,
+                            coordIndexes: [a, b, c, d, e],
+                        };
                     }
                 }
             }

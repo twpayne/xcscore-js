@@ -1,9 +1,31 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended",
+    "tslint-consistent-codestyle"
+  ],
+  "jsRules": {},
+  "rules": {
+    "const-parameters": true,
+    "early-exit": true,
+    "curly": "always",
+    "naming-convention": false,
+    "no-accessor-recursion": true,
+    "no-collapsible-if": true,
+    "no-else-after-return": true,
+    "no-unnecessary-else": true,
+    "no-return-undefined": true,
+    "no-static-this": true,
+    "no-unused": true,
+    "no-unused-expression": true,
+    "no-var-before-return": true,
+    "object-shorthand-properties-first": true,
+    "parameter-properties": [
+      true,
+      "all-or-none",
+      "readonly"
     ],
-    "jsRules": {},
-    "rules": {},
-    "rulesDirectory": []
+    "prefer-const-enum": true
+  },
+  "rulesDirectory": []
 }
