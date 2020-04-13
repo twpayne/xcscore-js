@@ -1,14 +1,13 @@
 {
-  "name": "xcscore",
+  "name": "@twpayne/xcscore",
   "version": "1.0.0",
   "description": "Cross country league scoring for paragliding",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "docs": "typedoc",
     "lint": "tslint -c tslint.json -p .",
     "test": "jest",
-    "prepublish": "npm run build"
+    "typedoc": "typedoc"
   },
   "repository": {
     "type": "git",
