@@ -69,11 +69,11 @@
 				<a href="#introduction" id="introduction" style="color: inherit; text-decoration: none;">
 					<h2>Introduction</h2>
 				</a>
-				<p>xcscore computes highest scoring flights from an array of coords. It is designed
-					for use in XC flight planning software like <a href="https://xcplanner.appspot.com">XC
-					Planner</a>. It uses crude brute-force algorithms
-					that support only a small number of coordinates and is not suitable for scoring
-				flights from GPS tracklogs.</p>
+				<p>xcscore computes the highest scoring flight from an array of coords according to
+					the World XContest and Swiss Cross Country Cup rules. It is designed for use in
+					XC flight planning software like <a href="https://xcplanner.appspot.com">XC Planner</a>. It
+					uses crude brute-force algorithms that support only a small number of
+				coordinates and is not suitable for scoring flights from GPS tracklogs.</p>
 				<a href="#api-overview" id="api-overview" style="color: inherit; text-decoration: none;">
 					<h2>API overview</h2>
 				</a>
@@ -87,7 +87,8 @@
 				<p>Each function takes a single object as an argument with two properties:</p>
 				<ul>
 					<li><code>coords</code>: an array of coordinates.</li>
-					<li><code>distKMFunc</code>: a function that returns the distance in kilometers between two coordinates.</li>
+					<li><code>distKMFunc</code>: a function that returns the distance in kilometers between two
+					coordinates.</li>
 				</ul>
 				<p>Each function returns a single object describing the highest scoring flight
 				found with five properties:</p>
@@ -106,11 +107,25 @@
 				<code>multiplier</code>, and <code>score</code> <code>0</code>, and <code>coords</code> <code>[]</code>.</p>
 				<p>For a full description of the API, consult the documentation in the <code>dist/docs</code>
 				directory.</p>
-				<a href="#use-with-leafletjs" id="use-with-leafletjs" style="color: inherit; text-decoration: none;">
-					<h2>Use with LeafletJS</h2>
+				<a href="#use-with-popular-javascript-mapping-libraries" id="use-with-popular-javascript-mapping-libraries" style="color: inherit; text-decoration: none;">
+					<h2>Use with popular JavaScript mapping libraries</h2>
 				</a>
-				<p>If you&#39;re using <a href="https://leafletjs.com/">LeafletJS</a> then you <code>coords</code> can be an
-				array of <code>LatLng</code>s and you can use the following function as <code>distKMFunc</code>:</p>
+				<p>xcscore is independent of the coordinate format and the function to compute the
+					distance between two coordinates. As such, it can be used with any mapping
+				library.</p>
+				<a href="#google-maps-javascript-api" id="google-maps-javascript-api" style="color: inherit; text-decoration: none;">
+					<h3>Google Maps JavaScript API</h3>
+				</a>
+				<p><code>coords</code> can be an array of <code>google.maps.LatLng</code>s and you can use the following
+				function as <code>distKMFunc</code>:</p>
+				<pre><code class="language-javascript">func diskKM(latLng1, latLng2) {
+    <span class="hljs-keyword">return</span> google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2, <span class="hljs-number">6371</span>);
+}</code></pre>
+				<a href="#leafletjs" id="leafletjs" style="color: inherit; text-decoration: none;">
+					<h3>LeafletJS</h3>
+				</a>
+				<p><code>coords</code> can be an array of <code>LatLng</code>s and you can use the following function as
+				<code>distKMFunc</code>:</p>
 				<pre><code class="language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">distKM</span>(<span class="hljs-params">latLng1, latLng2</span>) </span>{
     <span class="hljs-keyword">return</span> latLng1.distanceTo(latLng2)/<span class="hljs-number">1000</span>;
 }</code></pre>

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 ;
 /**
- * Return scoreComponents's score.
+ * Return the score from a distance and a multiplier.
  */
 function getScore(config) {
     return config.dist * config.multiplier;
@@ -56,17 +56,21 @@ class DistMatrix {
  * @param n Minimum length of the returned array.
  */
 function padCoords(coords, n) {
+    // If coords is already long enough, return it immediately.
     if (coords.length >= n) {
         return coords;
     }
+    // Otherwise, create a new array of coords with the elements of coords...
     const paddedCoords = [];
     for (const coord of coords) {
         paddedCoords.push(coord);
     }
+    // ...pad it with the last coord until it is long enough...
     const lastCoord = coords[coords.length - 1];
     for (let i = coords.length; i < n; ++i) {
         paddedCoords.push(lastCoord);
     }
+    // ...and return it.
     return paddedCoords;
 }
 /**
@@ -106,18 +110,21 @@ function scoreStraightDist(config) {
  * @param config.distMatrix Distance matrix.
  */
 function scoreDistViaThreeTurnpoints(config) {
+    // Distance via three turnpoints requires five turnpoints: a start, three
+    // turnpoints, and a finish, which must be visited in order. Iterate over
+    // all possible combinations to find the highest scoring flight.
     const n = config.distMatrix.n;
     const dist = config.distMatrix.dist.bind(config.distMatrix);
     let bestDist = -Infinity;
     let bestCoordIndexes = [];
-    for (let a = 0; a < n - 4; ++a) {
-        for (let b = a + 1; b < n - 3; ++b) {
+    for (let a = 0; a < n - 4; ++a) { // Start.
+        for (let b = a + 1; b < n - 3; ++b) { // First turnpoint.
             const distAB = dist(a, b);
-            for (let c = b + 1; c < n - 2; ++c) {
+            for (let c = b + 1; c < n - 2; ++c) { // Second turnpoint.
                 const distBC = dist(b, c);
-                for (let d = c + 1; d < n - 1; ++d) {
+                for (let d = c + 1; d < n - 1; ++d) { // Third turnpoint.
                     const distCD = dist(c, d);
-                    for (let e = d + 1; e < n; ++e) {
+                    for (let e = d + 1; e < n; ++e) { // Finish.
                         const distDE = dist(d, e);
                         const totalDist = distAB + distBC + distCD + distDE;
                         if (totalDist > bestDist) {
@@ -138,42 +145,64 @@ function scoreDistViaThreeTurnpoints(config) {
 }
 /**
  * Return an interim score for the highest-scoring triangle flight according to
- * triTypeFunc. It uses a brute force algorithm with a running time of O(N^5)
- * when N is the number of coords, and so should only be used for a few coords.
+ * triTypeFunc, or null if there are no triangles. This uses a brute force
+ * algorithm with a running time of O(N^5) when N is the number of coords, and
+ * so should only be used for a few coords.
  *
  * @param config.distMatrix Distance matrix.
  * @param config.tryTypeFunc Function to determine whether a flight is a
  * triangle.
  */
 function scoreTris(config) {
+    // Triangles require five turnpoints: a start, three turnpoints, and a
+    // finish. The start and the first turnpoint can be the same, as can the
+    // last turnpoint and the finish. Iterate over all possible combinations to
+    // find the highest scoring flight.
     const n = config.distMatrix.n;
     const dist = config.distMatrix.dist.bind(config.distMatrix);
     const triTypeFunc = config.triTypeFunc;
     let bestInterimScore = null;
-    for (let a = 0; a < n - 3; ++a) {
-        for (let b = a; b < n - 2; ++b) {
+    for (let a = 0; a < n - 3; ++a) { // Start.
+        for (let b = a; b < n - 2; ++b) { // First turnpoint, including start.
             const distAB = dist(a, b);
-            for (let c = b + 1; c < n - 1; ++c) {
+            for (let c = b + 1; c < n - 1; ++c) { // Second turnpoint.
                 const distBC = dist(b, c);
-                for (let d = c + 1; d < n; ++d) {
+                for (let d = c + 1; d < n; ++d) { // Third turnpoint.
                     const distCD = dist(c, d);
-                    for (let e = d; e < n; ++e) {
+                    for (let e = d; e < n; ++e) { // Finish, including third turnpoint.
                         const distDE = dist(d, e);
                         const distBD = dist(b, d);
+                        // FAI triangles are defined by the shortest side being
+                        // at least 28% of the total triangle distance. The
+                        // total triangle distance is defined by the three
+                        // corners of the triangle, and is not related to the
+                        // start or finish points.
                         const isFAI = Math.min(distBC, distCD, distBD) >= 0.28 * (distBC + distCD + distBD);
+                        // The total distance flown is the total distance flown
+                        // by the pilot, i.e. the distance from the start to the
+                        // first turnpoint, then to the second turnpoint, then
+                        // to the third turnpoint, then to the finish, for a
+                        // total of four legs.
                         const totalDistFlown = distAB + distBC + distCD + distDE;
+                        // The gap distance is the distance between the start
+                        // turnpoint and the finish turnpoint.
                         const gapDist = dist(a, e);
+                        // Find out if this is a triangle.
                         const triType = triTypeFunc({
                             isFAI,
                             totalDistFlown,
                             gapDist,
                         });
+                        // If this is not a triangle, try the next combination.
                         if (!triType) {
                             continue;
                         }
+                        // If there is already a best triangle which is better
+                        // than this one, try the next combination.
                         if (bestInterimScore && totalDistFlown * triType.multiplier <= getScore(bestInterimScore)) {
                             continue;
                         }
+                        // Otherwise, save the new best triangle.
                         bestInterimScore = {
                             flightType: triType.flightType,
                             dist: totalDistFlown,
@@ -196,15 +225,20 @@ function scoreTris(config) {
  * @param config.coords Coords.
  */
 function finalizeBestInterimScore(config) {
+    // Iterate over interimScores to find the best score.
     let bestInterimScore = null;
     for (const interimScore of config.interimScores) {
+        // Skip nulls.
         if (!interimScore) {
             continue;
         }
+        // Replace the best score if there is no existing best score, or there
+        // is a better score.
         if (!bestInterimScore || getScore(interimScore) > getScore(bestInterimScore)) {
             bestInterimScore = interimScore;
         }
     }
+    // If there is no best score, return a "no score".
     if (!bestInterimScore) {
         return {
             flightType: "none" /* None */,
@@ -214,6 +248,7 @@ function finalizeBestInterimScore(config) {
             coords: [],
         };
     }
+    // Convert the best interim score to a final score.
     return {
         flightType: bestInterimScore.flightType,
         dist: bestInterimScore.dist,
@@ -264,6 +299,7 @@ function roundCHCrossCountryCupScore(score) {
  */
 function scoreCHCrossCountryCup(config) {
     const { coords, distKMFunc } = config;
+    // If there are one or two coords, then there is no distance and no score.
     if (coords.length < 2) {
         return {
             flightType: "none" /* None */,
@@ -273,6 +309,7 @@ function scoreCHCrossCountryCup(config) {
             coords: [],
         };
     }
+    // If there are only two coors, then there is only straight distance.
     if (coords.length === 2) {
         const dist = distKMFunc(coords[0], coords[1]);
         return {
@@ -361,6 +398,7 @@ function roundWorldXContestScore(score) {
  */
 function scoreWorldXContest(config) {
     const { coords, distKMFunc } = config;
+    // If there are one or two coords, then there is no distance and no score.
     if (coords.length < 2) {
         return {
             flightType: "none" /* None */,
@@ -370,6 +408,7 @@ function scoreWorldXContest(config) {
             coords: [],
         };
     }
+    // If there are only two coors, then there is only open distance.
     if (coords.length === 2) {
         const dist = distKMFunc(coords[0], coords[1]);
         return {

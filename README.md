@@ -4,11 +4,11 @@ Cross country league flight scoring for paragliding.
 
 ## Introduction
 
-xcscore computes highest scoring flights from an array of coords. It is designed
-for use in XC flight planning software like [XC
-Planner](https://xcplanner.appspot.com). It uses crude brute-force algorithms
-that support only a small number of coordinates and is not suitable for scoring
-flights from GPS tracklogs.
+xcscore computes the highest scoring flight from an array of coords according to
+the World XContest and Swiss Cross Country Cup rules. It is designed for use in
+XC flight planning software like [XC Planner](https://xcplanner.appspot.com). It
+uses crude brute-force algorithms that support only a small number of
+coordinates and is not suitable for scoring flights from GPS tracklogs.
 
 ## API overview
 
@@ -22,7 +22,8 @@ xcscore exports two functions:
 Each function takes a single object as an argument with two properties:
 
 * `coords`: an array of coordinates.
-* `distKMFunc`: a function that returns the distance in kilometers between two coordinates.
+* `distKMFunc`: a function that returns the distance in kilometers between two
+  coordinates.
 
 Each function returns a single object describing the highest scoring flight
 found with five properties:
@@ -43,10 +44,27 @@ coords) then the returned object will have `flightType` `"none"`, `dist`,
 For a full description of the API, consult the documentation in the `dist/docs`
 directory.
 
-## Use with LeafletJS
+## Use with popular JavaScript mapping libraries
 
-If you're using [LeafletJS](https://leafletjs.com/) then you `coords` can be an
-array of `LatLng`s and you can use the following function as `distKMFunc`:
+xcscore is independent of the coordinate format and the function to compute the
+distance between two coordinates. As such, it can be used with any mapping
+library.
+
+### Google Maps JavaScript API
+
+`coords` can be an array of `google.maps.LatLng`s and you can use the following
+function as `distKMFunc`:
+
+```javascript
+func diskKM(latLng1, latLng2) {
+    return google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2, 6371);
+}
+```
+
+### LeafletJS
+
+`coords` can be an array of `LatLng`s and you can use the following function as
+`distKMFunc`:
 
 ```javascript
 function distKM(latLng1, latLng2) {
