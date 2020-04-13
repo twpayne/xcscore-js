@@ -2,6 +2,7 @@ import {
     DistMatrix,
     cartesianDist,
     scoreCrossCountryCup,
+    scoreWorldXContest,
 } from ".";
 
 describe("cartesianDist", () => {
@@ -397,6 +398,360 @@ describe("scoreCrossCountryCup", () => {
             dist: 14,
             multiplier: 1.3,
             score: 18.2,
+            coords: [
+                [2, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [4, 0],
+            ],
+        });
+    })
+})
+
+describe("scoreWorldXContest", () => {
+    test("no coords, none", () => {
+        const score = scoreWorldXContest({
+            coords: [],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "none",
+            dist: 0,
+            multiplier: 0,
+            score: 0,
+            coords: [],
+        });
+    })
+
+    test("one coord, none", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "none",
+            dist: 0,
+            multiplier: 0,
+            score: 0,
+            coords: [],
+        });
+    })
+
+    test("two coords, open distance", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [0, 1],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 1,
+            multiplier: 1,
+            score: 1,
+            coords: [
+                [0, 0],
+                [0, 1],
+            ],
+        });
+    })
+
+    test("three coords, open distance", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [0, 1],
+                [0, 2],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 2,
+            multiplier: 1,
+            score: 2,
+            coords: [
+                [0, 0],
+                [0, 1],
+                [0, 2],
+                [0, 2],
+                [0, 2],
+            ],
+        });
+    })
+
+    test("three coords, flat triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 0],
+                [1, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "flatTri",
+            dist: 5,
+            multiplier: 1.2,
+            score: 6,
+            coords: [
+                [0, 0],
+                [0, 0],
+                [3, 0],
+                [1, 0],
+                [1, 0],
+            ],
+        });
+    })
+
+    test("four coords, open distance", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [0, 1],
+                [0, 2],
+                [0, 3],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 3,
+            multiplier: 1,
+            score: 3,
+            coords: [
+                [0, 0],
+                [0, 1],
+                [0, 2],
+                [0, 3],
+                [0, 3],
+            ],
+        });
+    })
+
+    test("four coords, open distance", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [9, 4],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 15,
+            multiplier: 1,
+            score: 15,
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [9, 4],
+                [9, 4],
+            ],
+        });
+    })
+
+    test("four coords, flat triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [1, 0],
+                [0, 0],
+                [3, 0],
+                [2, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "flatTri",
+            dist: 5,
+            multiplier: 1.2,
+            score: 6,
+            coords: [
+                [1, 0],
+                [1, 0],
+                [0, 0],
+                [3, 0],
+                [2, 0],
+            ],
+        });
+    })
+
+    test("four coords, open distance (almost flat triangle)", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [1, 0],
+                [0, 0],
+                [4, 0],
+                [3, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 6,
+            multiplier: 1,
+            score: 6,
+            coords: [
+                [1, 0],
+                [0, 0],
+                [4, 0],
+                [3, 0],
+                [3, 0],
+            ],
+        });
+    })
+
+    test("four coords, FAI triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [1, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "faiTri",
+            dist: 15,
+            multiplier: 1.4,
+            score: 21,
+            coords: [
+                [0, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [1, 0],
+            ],
+        });
+    })
+
+    test("four coords, open distance (almost FAI triangle)", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [3, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 13,
+            multiplier: 1,
+            score: 13,
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [3, 0],
+                [3, 0],
+            ],
+        });
+    })
+
+    test("five coords, open distance", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [1, 0],
+                [2, 0],
+                [3, 0],
+                [4, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 4,
+            multiplier: 1,
+            score: 4,
+            coords: [
+                [0, 0],
+                [1, 0],
+                [2, 0],
+                [3, 0],
+                [4, 0],
+            ],
+        });
+    })
+
+    test("five coords, open distance", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [9, 4],
+                [12, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "openDist",
+            dist: 20,
+            multiplier: 1,
+            score: 20,
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [9, 4],
+                [12, 0],
+            ],
+        });
+    })
+
+    test("five coords, flat triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [3, 0],
+                [0, 0],
+                [4, 3],
+                [8, 0],
+                [5, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "flatTri",
+            dist: 16,
+            multiplier: 1.2,
+            score: 19.2,
+            coords: [
+                [3, 0],
+                [0, 0],
+                [4, 3],
+                [8, 0],
+                [5, 0],
+            ],
+        });
+    })
+
+    test("five coords, FAI triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [2, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [4, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "faiTri",
+            dist: 14,
+            multiplier: 1.4,
+            score: 19.6,
             coords: [
                 [2, 0],
                 [0, 0],
