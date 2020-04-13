@@ -17,4 +17,9 @@
         "node_modules",
         "**/*.spec.ts"
     ],
+    "typedocOptions": {
+        "excludeNotExported": true,
+        "mode": "file",
+        "out": "dist/docs"
+    }
 }

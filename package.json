@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "docs": "typedoc",
     "lint": "tslint -c tslint.json -p .",
     "test": "jest",
     "prepublish": "npm run build"
@@ -28,10 +29,12 @@
   "homepage": "https://github.com/twpayne/xcscore-js#readme",
   "devDependencies": {
     "@types/jest": "^25.2.1",
+    "@types/node": "^13.11.1",
     "jest": "^25.3.0",
     "ts-jest": "^25.3.1",
     "tslint": "^6.1.1",
     "tslint-consistent-codestyle": "^1.16.0",
+    "typedoc": "^0.17.4",
     "typescript": "^3.8.3"
   }
 }

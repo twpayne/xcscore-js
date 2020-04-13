@@ -1,4 +1,6 @@
-// A FlightType is a type of flight.
+/**
+ * A type of flight.
+ */
 const enum FlightType {
     None = "none",
     ClosedFAITri = "closedFAITri",
@@ -10,44 +12,71 @@ const enum FlightType {
     StraightDist = "straightDist",
 };
 
-// A Coord is a coordinate.
+/**
+ * A coordinate.
+ */
 type Coord = any;
 
-// A DistFunc returns the distance between two Coords.
+/**
+ * Return the distance between two coords.
+ */
 type DistFunc = (coord1: Coord, coord2: Coord) => number;
 
-// A ScoreComponents contains a distance and a multiplier.
+/**
+ * A distance and a multiplier.
+ */
 interface ScoreComponents {
     dist: number,
     multiplier: number,
 }
 
-// getScore is a convenience function that returns scoreComponents's score.
+/**
+ * Return scoreComponents's score.
+ */
 function getScore(scoreComponents: ScoreComponents): number {
     return scoreComponents.dist * scoreComponents.multiplier;
 }
 
-// An InterimScore is an interim score.
+/**
+ * An interim score. Contains a flight type, a distance, a multiplier, and
+ * indexes into an array of coords.
+ */
 interface InterimScore extends ScoreComponents {
     flightType: FlightType,
     coordIndexes: ReadonlyArray<number>,
 }
 
-// A RoundScoreFunc rounds a score.
+/**
+ * Round a score.
+ */
 type RoundScoreFunc = (score: number) => number;
 
-// A FinalScore is a scored flight.
+/**
+ * A scored flight. Contains a flight type, a distance, a multiplier, a rounded
+ * score, and an array of coords. Note that the score is not necessariliy equal
+ * to the product of the distance and the multiplier due to rounding.
+ */
 interface FinalScore extends ScoreComponents {
     flightType: FlightType,
     score: number,
     coords: ReadonlyArray<Coord>,
 }
 
-// A DistMatrix is a symmetric matrix storing dists between Coords.
+/**
+ * A symmetric distance matrix storing distances between coords. As the matrix
+ * is strictly triangular, only the upper triangular matrix excluding the
+ * diagonal is stored.
+ */
 class DistMatrix {
     readonly n: number;
     readonly dists: ReadonlyArray<number>;
 
+    /**
+     * Construct a new DistMatrix.
+     *
+     * @param config.coords Coords array.
+     * @param config.distFunc Distance function.
+     */
     constructor(config: {
         coords: ReadonlyArray<Coord>,
         distFunc: DistFunc,
@@ -64,6 +93,13 @@ class DistMatrix {
         this.dists = dists;
     }
 
+    /**
+     * Return the distance between coord at index i and the coord at index j. i
+     * must be less than or equal to j.
+     *
+     * @param i Index of first coord.
+     * @param j Index of second coord.
+     */
     dist(i: number, j: number): number {
         if (i === j) {
             return 0;
@@ -72,8 +108,16 @@ class DistMatrix {
     }
 }
 
-// padCoords ensures that coords contains at least n elements by repeating the
-// last element as many times as necessary.
+/**
+ * Return an array of coords that contains at least n elements by repeating the
+ * last element as many times as necessary. If coords already contains at least
+ * n elements then it is returned directly. If coords contains fewer than n
+ * elements then a new array is returned, leaving the original coords array
+ * unchanged.
+ *
+ * @param coords Coords array.
+ * @param n Minimum length of the returned array.
+ */
 function padCoords(
     coords: ReadonlyArray<Coord>,
     n: number,
@@ -92,9 +136,13 @@ function padCoords(
     return paddedCoords;
 }
 
-// scoreStraightDist returns an InterimScore for the highest-scoring distance
-// between any two coords. It uses a brute force algorithm with a running time
-// of O(N^2) when N is the number of coords.
+/**
+ * Return an interim score for the highest-scoring distance between any two
+ * coords. It uses a brute force algorithm with a running time of O(N^2) when N
+ * is the number of coords, and so should only be used with a few coords.
+ *
+ * @param config.distMatrix Distance matrix.
+ */
 function scoreStraightDist(config: {
     distMatrix: DistMatrix,
 }): InterimScore {
@@ -119,9 +167,14 @@ function scoreStraightDist(config: {
     };
 }
 
-// scoreDistViaThreeTurnpoints returns an InterimScore for the highest-scoring
-// distance via three turnpoints. It uses a brute force algorithm with a running
-// time of O(N^5) when N is the number of coords.
+/**
+ * Return an interim score for the highest-scoring distance via three
+ * turnpoints. It uses a brute force algorithm with a running time of O(N^5)
+ * when N is the number of coords, and so should only be used with a few coords.
+ *
+ * @param config.flightType The type of returned flight.
+ * @param config.distMatrix Distance matrix.
+ */
 function scoreDistViaThreeTurnpoints(config: {
     flightType: FlightType,
     distMatrix: DistMatrix,
@@ -157,27 +210,38 @@ function scoreDistViaThreeTurnpoints(config: {
     };
 }
 
-// A TriType is a type of triangle with a flight type and a multiplier, or null
-// if a flight is not a triangle.
+/**
+ * A type of triangle with a flight type and a multiplier, or null if a flight
+ * is not a triangle.
+ */
 type TriType = {
     flightType: FlightType,
     multiplier: number,
 } | null;
 
-// A TriTypeFuncConfig contains all the data required to determine if a flight
-// is a triangle.
+/**
+ * Contains all the data required to determine if a flight is a triangle.
+ */
 type TriTypeFuncConfig = {
     isFAI: boolean,
     totalDistFlown: number,
     closingDist: number
 }
 
-// A TriTypeFunc determines whether a flight is a triangle.
+/**
+ * Determine whether a flight is a triangle.
+ */
 type TriTypeFunc = (config: TriTypeFuncConfig) => TriType;
 
-// scoreTris returns an InterimScore for the highest-scoring triangle flight
-// according to triTypeFunc. It uses a brute force algorithm with a running time
-// of O(N^5) when N is the number of coords.
+/**
+ * Return an interim score for the highest-scoring triangle flight according to
+ * triTypeFunc. It uses a brute force algorithm with a running time of O(N^5)
+ * when N is the number of coords, and so should only be used for a few coords.
+ *
+ * @param config.distMatrix Distance matrix.
+ * @param config.tryTypeFunc Function to determine whether a flight is a
+ * triangle.
+ */
 function scoreTris(config: {
     distMatrix: DistMatrix,
     triTypeFunc: TriTypeFunc,
@@ -224,8 +288,14 @@ function scoreTris(config: {
     return bestInterimScore;
 }
 
-// bestScore returns the best score from interimScores, applying roundScoreFunc
-// and looking up coord indexes in coords.
+/**
+ * Return the best score from interimScores and convert it to a Score by
+ * applying roundScoreFunc and looking up coord indexes in coords.
+ *
+ * @param config.interimScores Interim scores.
+ * @param config.roundScoreFunc Score rounding function.
+ * @param config.coords Coords.
+ */
 function bestScore(config: {
     interimScores: ReadonlyArray<InterimScore | null>,
     roundScoreFunc: RoundScoreFunc,
@@ -252,17 +322,49 @@ function bestScore(config: {
     };
 }
 
-// roundCrossCountryCupScore rounds score according to the SHV's Cross Country
-// Cup rules.
-const roundCrossCountryCupScore: RoundScoreFunc = (score: number): number => {
+/**
+ * Return whether a flight is a Swiss Cross Country Cup triangle.
+ *
+ * @param config Triangle type function config.
+ */
+function crossCHCountryCupTriType(config: TriTypeFuncConfig): TriType {
+    const { isFAI, totalDistFlown, closingDist } = config;
+    const isTri = closingDist <= 0.2 * totalDistFlown;
+    if (!isTri) {
+        return null;
+    }
+    if (isFAI) {
+        return {
+            flightType: FlightType.FAITri,
+            multiplier: 1.3,
+        };
+    }
+    return {
+        flightType: FlightType.FlatTri,
+        multiplier: 1.2,
+    };
+}
+
+/**
+ * Round score according to the SHV's Cross Country Cup rules.
+ *
+ * @param score Score.
+ */
+function roundCHCrossCountryCupScore(score: number): number {
     return Math.round(10000*score)/10000;
 }
 
-// scoreCrossCountryCup scores coords using distFunc and the SHV's Cross Country
-// Cup 2020 rules. See: https://www.xcontest.org/switzerland/en/rules/.
-// https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/ReglementSportif_D_CCC_2020.pdf
-// https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/Sportreglement_D_CCC_2020.pdf
-export function scoreCrossCountryCup(config: {
+/**
+ * Score coords using the SHV's Cross Country Cup 2020 rules. See:
+ * https://www.xcontest.org/switzerland/en/rules/.
+ * https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/ReglementSportif_D_CCC_2020.pdf
+ * https://www.shv-fsvl.ch/fileadmin/files/redakteure/Allgemein/Sport/Reglemente/2020/Sportreglement_D_CCC_2020.pdf
+ *
+ * @param config.coords Coords.
+ * @param config.distKMFunc Function to return distance between two coords in
+ * kilometers.
+ */
+export function scoreCHCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>,
     distKMFunc: DistFunc,
 }): FinalScore | null {
@@ -284,7 +386,7 @@ export function scoreCrossCountryCup(config: {
             dist,
             flightType: FlightType.StraightDist,
             multiplier: 1.2,
-            score: roundCrossCountryCupScore(dist * 1.2),
+            score: roundCHCrossCountryCupScore(dist * 1.2),
             coords: [coords[0], coords[1]],
         };
     }
@@ -304,40 +406,70 @@ export function scoreCrossCountryCup(config: {
         }),
         scoreTris({
             distMatrix,
-            triTypeFunc(triConfig: TriTypeFuncConfig): TriType {
-                const { isFAI, totalDistFlown, closingDist } = triConfig;
-                const isTri = closingDist <= 0.2 * totalDistFlown;
-                if (!isTri) {
-                    return null;
-                }
-                if (isFAI) {
-                    return {
-                        flightType: FlightType.FAITri,
-                        multiplier: 1.3,
-                    };
-                }
-                return {
-                    flightType: FlightType.FlatTri,
-                    multiplier: 1.2,
-                };
-            },
+            triTypeFunc: crossCHCountryCupTriType,
         }),
     ];
 
     return bestScore({
         interimScores,
         coords: paddedCoords,
-        roundScoreFunc: roundCrossCountryCupScore,
+        roundScoreFunc: roundCHCrossCountryCupScore,
     });
 }
 
-// roundXContestScore rounds score according to the 2020 World XContest rules.
-const roundXContestScore: RoundScoreFunc = (score: number): number => {
+/**
+ * Return whether a flight is an World XContest triangle.
+ *
+ * @param config Triangle type function config.
+ */
+function worldXContestTriType(config: TriTypeFuncConfig): TriType {
+    const { isFAI, totalDistFlown, closingDist } = config;
+    const isTri = closingDist <= 0.2 * totalDistFlown;
+    if (!isTri) {
+        return null;
+    }
+    const isClosed = closingDist <= 0.05 * totalDistFlown;
+    if (isClosed && isFAI) {
+        return {
+            flightType: FlightType.ClosedFAITri,
+            multiplier: 1.6,
+        };
+    }
+    if (isClosed) {
+        return {
+            flightType: FlightType.ClosedFlatTri,
+            multiplier: 1.4,
+        };
+    }
+    if (isFAI) {
+        return {
+            flightType: FlightType.FAITri,
+            multiplier: 1.4,
+        };
+    }
+    return {
+        flightType: FlightType.FlatTri,
+        multiplier: 1.2,
+    };
+}
+
+/**
+ * Round score according to the 2020 World XContest rules.
+ *
+ * @param score Score.
+ */
+function roundWorldXContestScore(score: number): number {
     return Math.round(100*score)/100
 }
 
-// scoreWorldXContest scores coords using distFunc and the 2020 World XContest
-// rules. See: https://www.xcontest.org/world/en/rules/.
+/**
+ * Score coords using the 2020 World XContest rules. See:
+ * https://www.xcontest.org/world/en/rules/.
+ *
+ * @param config.coords Coords.
+ * @param config.distKMFunc Function to return distance between two coords in
+ * kilometers.
+ */
 export function scoreWorldXContest(config: {
     coords: ReadonlyArray<Coord>,
     distKMFunc: DistFunc,
@@ -360,7 +492,7 @@ export function scoreWorldXContest(config: {
             dist,
             flightType: FlightType.OpenDist,
             multiplier: 1,
-            score: roundXContestScore(dist),
+            score: roundWorldXContestScore(dist),
             coords: [coords[0], coords[1]],
         }
     }
@@ -377,42 +509,13 @@ export function scoreWorldXContest(config: {
         }),
         scoreTris({
             distMatrix,
-            triTypeFunc(triConfig: TriTypeFuncConfig): TriType {
-                const { isFAI, totalDistFlown, closingDist } = triConfig;
-                const isTri = closingDist <= 0.2 * totalDistFlown;
-                if (!isTri) {
-                    return null;
-                }
-                const isClosed = closingDist <= 0.05 * totalDistFlown;
-                if (isClosed && isFAI) {
-                    return {
-                        flightType: FlightType.ClosedFAITri,
-                        multiplier: 1.6,
-                    };
-                }
-                if (isClosed) {
-                    return {
-                        flightType: FlightType.ClosedFlatTri,
-                        multiplier: 1.4,
-                    };
-                }
-                if (isFAI) {
-                    return {
-                        flightType: FlightType.FAITri,
-                        multiplier: 1.4,
-                    };
-                }
-                return {
-                    flightType: FlightType.FlatTri,
-                    multiplier: 1.2,
-                };
-            },
+            triTypeFunc: worldXContestTriType,
         }),
     ];
 
     return bestScore({
         interimScores,
         coords: paddedCoords,
-        roundScoreFunc: roundXContestScore,
+        roundScoreFunc: roundWorldXContestScore,
     })
 }

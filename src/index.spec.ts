@@ -1,25 +1,22 @@
 import {
-    scoreCrossCountryCup,
+    scoreCHCrossCountryCup,
     scoreWorldXContest,
 } from ".";
 
-// A CartesianCoord is Cartesian coordinate.
 type CartesianCoord = [number, number];
 
-// cartesianDist returns the Cartesian distance between coord1 and coord2 using
-// the Pythagorean theorem.
-const cartesianDist = (
+function cartesianDist(
     coord1: CartesianCoord,
     coord2: CartesianCoord,
-): number => {
+): number {
     const deltaX = coord1[0]-coord2[0];
     const deltaY = coord1[1]-coord2[1];
     return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
-describe("scoreCrossCountryCup", () => {
+describe("scoreCHCrossCountryCup", () => {
     test("no coords, none", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [],
             distKMFunc: cartesianDist,
         });
@@ -33,7 +30,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("one coord, none", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
             ],
@@ -49,7 +46,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("two coords, straight distance", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [0, 1],
@@ -69,7 +66,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("three coords, straight distance", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [0, 1],
@@ -90,7 +87,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("three coords, flat triangle", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [3, 0],
@@ -114,7 +111,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("four coords, straight distance", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [0, 1],
@@ -136,7 +133,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("four coords, free distance", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [3, 4],
@@ -161,7 +158,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("four coords, flat triangle", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [1, 0],
                 [0, 0],
@@ -186,7 +183,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("four coords, free distance (almost flat triangle)", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [1, 0],
                 [0, 0],
@@ -211,7 +208,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("four coords, FAI triangle", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [3, 4],
@@ -236,7 +233,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("four coords, free distance (almost FAI triangle)", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [3, 4],
@@ -261,7 +258,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("five coords, straight distance", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [1, 0],
@@ -284,7 +281,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("five coords, free distance", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [0, 0],
                 [3, 4],
@@ -310,7 +307,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("five coords, flat triangle", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [3, 0],
                 [0, 0],
@@ -336,7 +333,7 @@ describe("scoreCrossCountryCup", () => {
     })
 
     test("five coords, FAI triangle", () => {
-        const score = scoreCrossCountryCup({
+        const score = scoreCHCrossCountryCup({
             coords: [
                 [2, 0],
                 [0, 0],

@@ -15,8 +15,14 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: git diff --exit-code
+    - name: npm CI
+      run: |
+        npm ci
+        git diff --exit-code
+    - name: Generate docs
+      run: |
+        npm run docs
+        git diff # FIXME add --exit-code if/when typedoc generates repeatable output
     - uses: mooyoul/tslint-actions@v1.1.1
       with:
         pattern: '*.ts'
