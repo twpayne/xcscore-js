@@ -1,6 +1,6 @@
 import {
-    cartesianDist,
     DistMatrix,
+    cartesianDist,
     scoreCrossCountryCup,
 } from ".";
 
@@ -154,7 +154,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 0],
                 [1, 0],
-                [1, 0]
+                [1, 0],
             ],
         });
     })
@@ -165,7 +165,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [0, 1],
                 [0, 2],
-                [0, 3,]
+                [0, 3],
             ],
             distKMFunc: cartesianDist,
         });
@@ -187,7 +187,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 4],
                 [6, 0],
-                [9, 4]
+                [9, 4],
             ],
             distKMFunc: cartesianDist,
         });
@@ -201,7 +201,7 @@ describe("scoreCrossCountryCup", () => {
                 [3, 4],
                 [6, 0],
                 [9, 4],
-                [9, 4]
+                [9, 4],
             ],
         });
     })
@@ -212,7 +212,7 @@ describe("scoreCrossCountryCup", () => {
                 [1, 0],
                 [0, 0],
                 [3, 0],
-                [2, 0]
+                [2, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -226,7 +226,7 @@ describe("scoreCrossCountryCup", () => {
                 [1, 0],
                 [0, 0],
                 [3, 0],
-                [2, 0]
+                [2, 0],
             ],
         });
     })
@@ -237,7 +237,7 @@ describe("scoreCrossCountryCup", () => {
                 [1, 0],
                 [0, 0],
                 [4, 0],
-                [3, 0]
+                [3, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -251,7 +251,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [4, 0],
                 [3, 0],
-                [3, 0]
+                [3, 0],
             ],
         });
     })
@@ -262,7 +262,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 4],
                 [6, 0],
-                [1, 0]
+                [1, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -276,7 +276,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 4],
                 [6, 0],
-                [1, 0]
+                [1, 0],
             ],
         });
     })
@@ -287,7 +287,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 4],
                 [6, 0],
-                [3, 0]
+                [3, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -301,7 +301,7 @@ describe("scoreCrossCountryCup", () => {
                 [3, 4],
                 [6, 0],
                 [3, 0],
-                [3, 0]
+                [3, 0],
             ],
         });
     })
@@ -313,7 +313,7 @@ describe("scoreCrossCountryCup", () => {
                 [1, 0],
                 [2, 0],
                 [3, 0],
-                [4, 0]
+                [4, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -324,7 +324,7 @@ describe("scoreCrossCountryCup", () => {
             score: 4.8,
             coords: [
                 [0, 0],
-                [4, 0]
+                [4, 0],
             ],
         });
     })
@@ -336,7 +336,7 @@ describe("scoreCrossCountryCup", () => {
                 [3, 4],
                 [6, 0],
                 [9, 4],
-                [12, 0]
+                [12, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -350,7 +350,7 @@ describe("scoreCrossCountryCup", () => {
                 [3, 4],
                 [6, 0],
                 [9, 4],
-                [12, 0]
+                [12, 0],
             ],
         });
     })
@@ -362,7 +362,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [4, 3],
                 [8, 0],
-                [5, 0]
+                [5, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -376,7 +376,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [4, 3],
                 [8, 0],
-                [5, 0]
+                [5, 0],
             ],
         });
     })
@@ -388,7 +388,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 4],
                 [6, 0],
-                [4, 0]
+                [4, 0],
             ],
             distKMFunc: cartesianDist,
         });
@@ -402,7 +402,7 @@ describe("scoreCrossCountryCup", () => {
                 [0, 0],
                 [3, 4],
                 [6, 0],
-                [4, 0]
+                [4, 0],
             ],
         });
     })
