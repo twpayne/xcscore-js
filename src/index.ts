@@ -33,8 +33,7 @@ function getScore(config: {
 }
 
 /**
- * An interim score. Contains a flight type, a distance, a multiplier, and
- * indexes into an array of coords.
+ * An interim score.
  */
 interface InterimScore {
      /** Flight type. */
@@ -57,7 +56,7 @@ type RoundScoreFunc = (score: number) => number;
 
 /**
  * A scored flight. Note that the score is not necessariliy equal to the product
- * of the distance and the multiplier due to rounding.
+ * of the distance and the multiplier due to rounding rules.
  */
 interface FinalScore {
     /** Flight type. */
@@ -311,18 +310,18 @@ function scoreTris(config: {
 }
 
 /**
- * Return the best score from interimScores and convert it to a Score by
- * applying roundScoreFunc and looking up coord indexes in coords.
+ * Return a FinalScore from the best interimScore from interimScores by applying
+ * roundScoreFunc and looking up coord indexes in coords.
  *
  * @param config.interimScores Interim scores.
  * @param config.roundScoreFunc Score rounding function.
  * @param config.coords Coords.
  */
-function bestScore(config: {
+function finalizeBestInterimScore(config: {
     interimScores: ReadonlyArray<InterimScore | null>,
     roundScoreFunc: RoundScoreFunc,
     coords: ReadonlyArray<Coord>,
-}): FinalScore | null {
+}): FinalScore {
     let bestInterimScore: InterimScore | null = null;
     for (const interimScore of config.interimScores) {
         if (!interimScore) {
@@ -333,7 +332,13 @@ function bestScore(config: {
         }
     }
     if (!bestInterimScore) {
-        return null;
+        return {
+            flightType: FlightType.None,
+            dist: 0,
+            multiplier: 0,
+            score: 0,
+            coords: [],
+        };
     }
     return {
         flightType: bestInterimScore.flightType,
@@ -389,7 +394,7 @@ function roundCHCrossCountryCupScore(score: number): number {
 export function scoreCHCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>,
     distKMFunc: DistFunc,
-}): FinalScore | null {
+}): FinalScore {
     const { coords, distKMFunc } = config;
 
     if (coords.length < 2) {
@@ -432,7 +437,7 @@ export function scoreCHCrossCountryCup(config: {
         }),
     ];
 
-    return bestScore({
+    return finalizeBestInterimScore({
         interimScores,
         coords: paddedCoords,
         roundScoreFunc: roundCHCrossCountryCupScore,
@@ -495,7 +500,7 @@ function roundWorldXContestScore(score: number): number {
 export function scoreWorldXContest(config: {
     coords: ReadonlyArray<Coord>,
     distKMFunc: DistFunc,
-}): FinalScore | null {
+}): FinalScore {
     const { coords, distKMFunc } = config;
 
     if (coords.length < 2) {
@@ -535,7 +540,7 @@ export function scoreWorldXContest(config: {
         }),
     ];
 
-    return bestScore({
+    return finalizeBestInterimScore({
         interimScores,
         coords: paddedCoords,
         roundScoreFunc: roundWorldXContestScore,

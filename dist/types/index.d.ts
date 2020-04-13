@@ -21,7 +21,7 @@ declare type Coord = any;
 declare type DistFunc = (coord1: Coord, coord2: Coord) => number;
 /**
  * A scored flight. Note that the score is not necessariliy equal to the product
- * of the distance and the multiplier due to rounding.
+ * of the distance and the multiplier due to rounding rules.
  */
 interface FinalScore {
     /** Flight type. */
@@ -48,7 +48,7 @@ interface FinalScore {
 export declare function scoreCHCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>;
     distKMFunc: DistFunc;
-}): FinalScore | null;
+}): FinalScore;
 /**
  * Score coords using the 2020 World XContest rules. See:
  * https://www.xcontest.org/world/en/rules/.
@@ -60,6 +60,6 @@ export declare function scoreCHCrossCountryCup(config: {
 export declare function scoreWorldXContest(config: {
     coords: ReadonlyArray<Coord>;
     distKMFunc: DistFunc;
-}): FinalScore | null;
+}): FinalScore;
 export {};
 //# sourceMappingURL=index.d.ts.map

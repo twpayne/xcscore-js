@@ -188,14 +188,14 @@ function scoreTris(config) {
     return bestInterimScore;
 }
 /**
- * Return the best score from interimScores and convert it to a Score by
- * applying roundScoreFunc and looking up coord indexes in coords.
+ * Return a FinalScore from the best interimScore from interimScores by applying
+ * roundScoreFunc and looking up coord indexes in coords.
  *
  * @param config.interimScores Interim scores.
  * @param config.roundScoreFunc Score rounding function.
  * @param config.coords Coords.
  */
-function bestScore(config) {
+function finalizeBestInterimScore(config) {
     let bestInterimScore = null;
     for (const interimScore of config.interimScores) {
         if (!interimScore) {
@@ -206,7 +206,13 @@ function bestScore(config) {
         }
     }
     if (!bestInterimScore) {
-        return null;
+        return {
+            flightType: "none" /* None */,
+            dist: 0,
+            multiplier: 0,
+            score: 0,
+            coords: [],
+        };
     }
     return {
         flightType: bestInterimScore.flightType,
@@ -295,7 +301,7 @@ function scoreCHCrossCountryCup(config) {
             triTypeFunc: crossCHCountryCupTriType,
         }),
     ];
-    return bestScore({
+    return finalizeBestInterimScore({
         interimScores,
         coords: paddedCoords,
         roundScoreFunc: roundCHCrossCountryCupScore,
@@ -389,7 +395,7 @@ function scoreWorldXContest(config) {
             triTypeFunc: worldXContestTriType,
         }),
     ];
-    return bestScore({
+    return finalizeBestInterimScore({
         interimScores,
         coords: paddedCoords,
         roundScoreFunc: roundWorldXContestScore,
