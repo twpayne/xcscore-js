@@ -26,7 +26,10 @@ type DistFunc = (coord1: Coord, coord2: Coord) => number;
  * A distance and a multiplier.
  */
 interface ScoreComponents {
+    /** Distance. */
     dist: number,
+
+     /** Multipler. */
     multiplier: number,
 }
 
