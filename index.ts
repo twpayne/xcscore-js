@@ -44,7 +44,7 @@ interface FinalScore extends ScoreComponents {
 }
 
 // A DistMatrix is a symmetric matrix storing dists between Coords.
-export class DistMatrix {
+class DistMatrix {
     readonly n: number;
     readonly dists: ReadonlyArray<number>;
 
@@ -245,20 +245,6 @@ function bestScore(config: {
         score: config.roundScoreFunc(getScore(bestInterimScore)),
         coords: bestInterimScore.coordIndexes.map(i => config.coords[i]),
     };
-}
-
-// A CartesianCoord is Cartesian coordinate.
-type CartesianCoord = [number, number];
-
-// cartesianDist returns the Cartesian distance between coord1 and coord2 using
-// the Pythagorean theorem.
-export let cartesianDist: DistFunc = (
-    coord1: CartesianCoord,
-    coord2: CartesianCoord,
-): number => {
-    const deltaX = coord1[0]-coord2[0];
-    const deltaY = coord1[1]-coord2[1];
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 }
 
 // roundCrossCountryCupScore rounds score according to the SHV's Cross Country

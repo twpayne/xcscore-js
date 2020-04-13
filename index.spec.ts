@@ -1,68 +1,21 @@
 import {
-    DistMatrix,
-    cartesianDist,
     scoreCrossCountryCup,
     scoreWorldXContest,
 } from ".";
 
-describe("cartesianDist", () => {
-    test.each([
-        [[0, 0], [3, 4], 5],
-        [[10, 20], [13, 24], 5],
-    ])("cartesianDist(%p, %p)", (coord1, coord2, expected) => {
-        expect(cartesianDist(coord1, coord2)).toBe(expected);
-    });
-});
+// A CartesianCoord is Cartesian coordinate.
+type CartesianCoord = [number, number];
 
-describe("DistMatrix", () => {
-    describe("simple", () => {
-        const distMatrix = new DistMatrix({
-            coords: [
-                [0, 0],
-                [0, 1],
-                [0, 2],
-            ],
-            distFunc: cartesianDist,
-        });
-        test("n", () => {
-            expect(distMatrix.n).toBe(3);
-        })
-        test.each([
-            [0, 0, 0],
-            [0, 1, 1],
-            [0, 2, 2],
-            [1, 1, 0],
-            [1, 2, 1],
-            [2, 2, 0],
-        ])("dist(%i, %i)", (i, j, expected) => {
-            expect(distMatrix.dist(i, j)).toBe(expected);
-        })
-    })
-
-    describe("triangle", () => {
-        const distMatrix = new DistMatrix({
-            coords: [
-                [0, 0],
-                [3, 4],
-                [6, 0],
-            ],
-            distFunc: cartesianDist,
-        });
-        test("n", () => {
-            expect(distMatrix.n).toBe(3);
-        })
-        test.each([
-            [0, 0, 0],
-            [0, 1, 5],
-            [0, 2, 6],
-            [1, 1, 0],
-            [1, 2, 5],
-            [2, 2, 0],
-        ])("dist(%i, %i)", (i, j, expected) => {
-            expect(distMatrix.dist(i, j)).toBe(expected);
-        })
-    })
-})
+// cartesianDist returns the Cartesian distance between coord1 and coord2 using
+// the Pythagorean theorem.
+const cartesianDist = (
+    coord1: CartesianCoord,
+    coord2: CartesianCoord,
+): number => {
+    const deltaX = coord1[0]-coord2[0];
+    const deltaY = coord1[1]-coord2[1];
+    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+}
 
 describe("scoreCrossCountryCup", () => {
     test("no coords, none", () => {

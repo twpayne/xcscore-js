@@ -19,16 +19,6 @@ interface FinalScore extends ScoreComponents {
     score: number;
     coords: ReadonlyArray<Coord>;
 }
-export declare class DistMatrix {
-    readonly n: number;
-    readonly dists: ReadonlyArray<number>;
-    constructor(config: {
-        coords: ReadonlyArray<Coord>;
-        distFunc: DistFunc;
-    });
-    dist(i: number, j: number): number;
-}
-export declare let cartesianDist: DistFunc;
 export declare function scoreCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>;
     distKMFunc: DistFunc;
