@@ -305,4 +305,105 @@ describe("scoreCrossCountryCup", () => {
             ],
         });
     })
+
+    test("five coords, straight distance", () => {
+        const score = scoreCrossCountryCup({
+            coords: [
+                [0, 0],
+                [1, 0],
+                [2, 0],
+                [3, 0],
+                [4, 0]
+            ],
+            distanceKMFunc: cartesianDistance,
+        });
+        expect(score).toStrictEqual({
+            flightType: "straightDistance",
+            distance: 4,
+            multiplier: 1.2,
+            score: 4.8,
+            coords: [
+                [0, 0],
+                [4, 0]
+            ],
+        });
+    })
+
+    test("five coords, free distance", () => {
+        const score = scoreCrossCountryCup({
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [9, 4],
+                [12, 0]
+            ],
+            distanceKMFunc: cartesianDistance,
+        });
+        expect(score).toStrictEqual({
+            flightType: "freeDistance",
+            distance: 20,
+            multiplier: 1,
+            score: 20,
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [9, 4],
+                [12, 0]
+            ],
+        });
+    })
+
+    test("five coords, flat triangle", () => {
+        const score = scoreCrossCountryCup({
+            coords: [
+                [3, 0],
+                [0, 0],
+                [4, 3],
+                [8, 0],
+                [5, 0]
+            ],
+            distanceKMFunc: cartesianDistance,
+        });
+        expect(score).toStrictEqual({
+            flightType: "flatTriangle",
+            distance: 16,
+            multiplier: 1.2,
+            score: 19.2,
+            coords: [
+                [3, 0],
+                [0, 0],
+                [4, 3],
+                [8, 0],
+                [5, 0]
+            ],
+        });
+    })
+
+    test("five coords, FAI triangle", () => {
+        const score = scoreCrossCountryCup({
+            coords: [
+                [2, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [4, 0]
+            ],
+            distanceKMFunc: cartesianDistance,
+        });
+        expect(score).toStrictEqual({
+            flightType: "faiTriangle",
+            distance: 14,
+            multiplier: 1.3,
+            score: 18.2,
+            coords: [
+                [2, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [4, 0]
+            ],
+        });
+    })
 })

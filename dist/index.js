@@ -118,19 +118,24 @@ function scoreTriangles(config) {
                     const distanceCD = distanceBetween(c, d);
                     for (let e = d; e < n; ++e) {
                         const distanceDE = distanceBetween(d, e);
-                        const totalDistance = distanceAB + distanceBC + distanceCD + distanceDE;
-                        const shortestLegDistance = Math.min(distanceBC, distanceCD, distanceBetween(b, d));
+                        const distanceBD = distanceBetween(b, d);
+                        const isFAI = Math.min(distanceBC, distanceCD, distanceBD) >= 0.28 * (distanceBC + distanceCD + distanceBD);
+                        const totalDistanceFlown = distanceAB + distanceBC + distanceCD + distanceDE;
                         const closingDistance = distanceBetween(a, e);
-                        const triangleType = triangleTypeFunc(totalDistance, shortestLegDistance, closingDistance);
+                        const triangleType = triangleTypeFunc({
+                            isFAI,
+                            totalDistanceFlown,
+                            closingDistance,
+                        });
                         if (!triangleType) {
                             continue;
                         }
-                        if (bestIntermediateScore && totalDistance * triangleType.multiplier <= getScore(bestIntermediateScore)) {
+                        if (bestIntermediateScore && totalDistanceFlown * triangleType.multiplier <= getScore(bestIntermediateScore)) {
                             continue;
                         }
                         bestIntermediateScore = {
                             flightType: triangleType.flightType,
-                            distance: totalDistance,
+                            distance: totalDistanceFlown,
                             multiplier: triangleType.multiplier,
                             coordIndexes: [a, b, c, d, e],
                         };
@@ -216,12 +221,12 @@ function scoreCrossCountryCup(config) {
         }),
         scoreTriangles({
             distanceMatrix,
-            triangleTypeFunc(totalDistance, shortestLegDistance, closingLegDistance) {
-                const isTriangle = closingLegDistance <= 0.2 * totalDistance;
+            triangleTypeFunc(triangleConfig) {
+                const { isFAI, totalDistanceFlown, closingDistance } = triangleConfig;
+                const isTriangle = closingDistance <= 0.2 * totalDistanceFlown;
                 if (!isTriangle) {
                     return null;
                 }
-                const isFAI = shortestLegDistance >= 0.28 * totalDistance;
                 if (isFAI) {
                     return {
                         flightType: "faiTriangle" /* FAITriangle */,
@@ -281,13 +286,13 @@ function scoreWorldXContest(config) {
         }),
         scoreTriangles({
             distanceMatrix,
-            triangleTypeFunc(totalDistance, shortestLegDistance, closingLegDistance) {
-                const isTriangle = closingLegDistance <= 0.2 * totalDistance;
+            triangleTypeFunc(triangleConfig) {
+                const { isFAI, totalDistanceFlown, closingDistance } = triangleConfig;
+                const isTriangle = closingDistance <= 0.2 * totalDistanceFlown;
                 if (!isTriangle) {
                     return null;
                 }
-                const isClosed = closingLegDistance <= 0.05 * totalDistance;
-                const isFAI = shortestLegDistance >= 0.28 * totalDistance;
+                const isClosed = closingDistance <= 0.05 * totalDistanceFlown;
                 if (isClosed && isFAI) {
                     return {
                         flightType: "closedFAITriangle" /* ClosedFAITriangle */,
