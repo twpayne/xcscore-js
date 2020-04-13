@@ -157,17 +157,22 @@ function scoreDistViaThreeTurnpoints(config: {
     };
 }
 
+// A TriType is a type of triangle with a flight type and a multiplier, or null
+// if a flight is not a triangle.
 type TriType = {
     flightType: FlightType,
     multiplier: number,
 } | null;
 
+// A TriTypeFuncConfig contains all the data required to determine if a flight
+// is a triangle.
 type TriTypeFuncConfig = {
     isFAI: boolean,
     totalDistFlown: number,
     closingDist: number
 }
 
+// A TriTypeFunc determines whether a flight is a triangle.
 type TriTypeFunc = (config: TriTypeFuncConfig) => TriType;
 
 // scoreTris returns an InterimScore for the highest-scoring triangle flight
