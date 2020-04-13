@@ -19,6 +19,6 @@ jobs:
     - run: git diff --exit-code
     - uses: mooyoul/tslint-actions@v1.1.1
       with:
-        pattern: '*.ts'
+        pattern: 'index.*.ts'
         token: ${{ secrets.GITHUB_TOKEN }}
 
