@@ -508,6 +508,30 @@ describe("scoreWorldXContest", () => {
         });
     })
 
+    test("three coords, closed flat triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 0],
+                [0, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "closedFlatTri",
+            dist: 6,
+            multiplier: 1.4,
+            score: 8.4,
+            coords: [
+                [0, 0],
+                [0, 0],
+                [3, 0],
+                [0, 0],
+                [0, 0],
+            ],
+        });
+    })
+
     test("four coords, open distance", () => {
         const score = scoreWorldXContest({
             coords: [
@@ -583,6 +607,31 @@ describe("scoreWorldXContest", () => {
         });
     })
 
+    test("four coords, closed flat triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [1, 0],
+                [0, 0],
+                [3, 0],
+                [1, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "closedFlatTri",
+            dist: 6,
+            multiplier: 1.4,
+            score: 8.4,
+            coords: [
+                [1, 0],
+                [1, 0],
+                [0, 0],
+                [3, 0],
+                [1, 0],
+            ],
+        });
+    })
+
     test("four coords, open distance (almost flat triangle)", () => {
         const score = scoreWorldXContest({
             coords: [
@@ -629,6 +678,31 @@ describe("scoreWorldXContest", () => {
                 [3, 4],
                 [6, 0],
                 [1, 0],
+            ],
+        });
+    })
+
+    test("four coords, closed FAI triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [0, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "closedFAITri",
+            dist: 16,
+            multiplier: 1.6,
+            score: 25.6,
+            coords: [
+                [0, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [0, 0],
             ],
         });
     })
@@ -736,6 +810,32 @@ describe("scoreWorldXContest", () => {
         });
     })
 
+    test("five coords, closed flat triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [4, 0],
+                [0, 0],
+                [4, 3],
+                [8, 0],
+                [4, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "closedFlatTri",
+            dist: 18,
+            multiplier: 1.4,
+            score: 25.2,
+            coords: [
+                [4, 0],
+                [0, 0],
+                [4, 3],
+                [8, 0],
+                [4, 0],
+            ],
+        });
+    })
+
     test("five coords, FAI triangle", () => {
         const score = scoreWorldXContest({
             coords: [
@@ -758,6 +858,32 @@ describe("scoreWorldXContest", () => {
                 [3, 4],
                 [6, 0],
                 [4, 0],
+            ],
+        });
+    })
+
+    test("five coords, closed FAI triangle", () => {
+        const score = scoreWorldXContest({
+            coords: [
+                [3, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [3, 0],
+            ],
+            distKMFunc: cartesianDist,
+        });
+        expect(score).toStrictEqual({
+            flightType: "closedFAITri",
+            dist: 16,
+            multiplier: 1.6,
+            score: 25.6,
+            coords: [
+                [3, 0],
+                [0, 0],
+                [3, 4],
+                [6, 0],
+                [3, 0],
             ],
         });
     })
