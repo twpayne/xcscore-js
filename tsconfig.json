@@ -11,11 +11,10 @@
         "target": "ES6"
     },
     "include": [
-        "src/index.ts"
+        "src/*.ts"
     ],
     "exclude": [
-        "node_modules",
-        "**/*.spec.ts"
+        "node_modules"
     ],
     "typedocOptions": {
         "excludeNotExported": true,

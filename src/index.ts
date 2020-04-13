@@ -23,29 +23,30 @@ type Coord = any;
 type DistFunc = (coord1: Coord, coord2: Coord) => number;
 
 /**
- * A distance and a multiplier.
- */
-interface ScoreComponents {
-    /** Distance. */
-    dist: number,
-
-     /** Multipler. */
-    multiplier: number,
-}
-
-/**
  * Return scoreComponents's score.
  */
-function getScore(scoreComponents: ScoreComponents): number {
-    return scoreComponents.dist * scoreComponents.multiplier;
+function getScore(config: {
+    dist: number,
+    multiplier: number,
+}): number {
+    return config.dist * config.multiplier;
 }
 
 /**
  * An interim score. Contains a flight type, a distance, a multiplier, and
  * indexes into an array of coords.
  */
-interface InterimScore extends ScoreComponents {
+interface InterimScore {
+     /** Flight type. */
     flightType: FlightType,
+
+    /** Distance. */
+    dist: number,
+
+     /** Multipler. */
+    multiplier: number,
+
+    /** Coord indexes. */
     coordIndexes: ReadonlyArray<number>,
 }
 
@@ -55,13 +56,23 @@ interface InterimScore extends ScoreComponents {
 type RoundScoreFunc = (score: number) => number;
 
 /**
- * A scored flight. Contains a flight type, a distance, a multiplier, a rounded
- * score, and an array of coords. Note that the score is not necessariliy equal
- * to the product of the distance and the multiplier due to rounding.
+ * A scored flight. Note that the score is not necessariliy equal to the product
+ * of the distance and the multiplier due to rounding.
  */
-interface FinalScore extends ScoreComponents {
+interface FinalScore {
+    /** Flight type. */
     flightType: FlightType,
+
+    /** Distance. */
+    dist: number,
+
+     /** Multipler. */
+    multiplier: number,
+
+    /** Rounded score. */
     score: number,
+
+    /** Coords. */
     coords: ReadonlyArray<Coord>,
 }
 
@@ -218,7 +229,10 @@ function scoreDistViaThreeTurnpoints(config: {
  * is not a triangle.
  */
 type TriType = {
+    /** Flight type. */
     flightType: FlightType,
+
+    /** Multiplier. */
     multiplier: number,
 } | null;
 
@@ -226,9 +240,14 @@ type TriType = {
  * Contains all the data required to determine if a flight is a triangle.
  */
 type TriTypeFuncConfig = {
+    /** Whether the triangle is an FAI triangle. */
     isFAI: boolean,
+
+    /** The total distance flown. */
     totalDistFlown: number,
-    closingDist: number
+
+    /* The gap between the start and the end of the flight. */
+    gapDist: number
 }
 
 /**
@@ -265,11 +284,11 @@ function scoreTris(config: {
                         const distBD = dist(b, d);
                         const isFAI = Math.min(distBC, distCD, distBD) >= 0.28 * (distBC + distCD + distBD);
                         const totalDistFlown = distAB + distBC + distCD + distDE;
-                        const closingDist = dist(a, e);
+                        const gapDist = dist(a, e);
                         const triType = triTypeFunc({
                             isFAI,
                             totalDistFlown,
-                            closingDist,
+                            gapDist,
                         });
                         if (!triType) {
                             continue;
@@ -331,8 +350,8 @@ function bestScore(config: {
  * @param config Triangle type function config.
  */
 function crossCHCountryCupTriType(config: TriTypeFuncConfig): TriType {
-    const { isFAI, totalDistFlown, closingDist } = config;
-    const isTri = closingDist <= 0.2 * totalDistFlown;
+    const { isFAI, totalDistFlown, gapDist } = config;
+    const isTri = gapDist <= 0.2 * totalDistFlown;
     if (!isTri) {
         return null;
     }
@@ -426,12 +445,12 @@ export function scoreCHCrossCountryCup(config: {
  * @param config Triangle type function config.
  */
 function worldXContestTriType(config: TriTypeFuncConfig): TriType {
-    const { isFAI, totalDistFlown, closingDist } = config;
-    const isTri = closingDist <= 0.2 * totalDistFlown;
+    const { isFAI, totalDistFlown, gapDist } = config;
+    const isTri = gapDist <= 0.2 * totalDistFlown;
     if (!isTri) {
         return null;
     }
-    const isClosed = closingDist <= 0.05 * totalDistFlown;
+    const isClosed = gapDist <= 0.05 * totalDistFlown;
     if (isClosed && isFAI) {
         return {
             flightType: FlightType.ClosedFAITri,

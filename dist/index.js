@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Return scoreComponents's score.
  */
-function getScore(scoreComponents) {
-    return scoreComponents.dist * scoreComponents.multiplier;
+function getScore(config) {
+    return config.dist * config.multiplier;
 }
 /**
  * A symmetric distance matrix storing distances between coords. As the matrix
@@ -162,11 +162,11 @@ function scoreTris(config) {
                         const distBD = dist(b, d);
                         const isFAI = Math.min(distBC, distCD, distBD) >= 0.28 * (distBC + distCD + distBD);
                         const totalDistFlown = distAB + distBC + distCD + distDE;
-                        const closingDist = dist(a, e);
+                        const gapDist = dist(a, e);
                         const triType = triTypeFunc({
                             isFAI,
                             totalDistFlown,
-                            closingDist,
+                            gapDist,
                         });
                         if (!triType) {
                             continue;
@@ -222,8 +222,8 @@ function bestScore(config) {
  * @param config Triangle type function config.
  */
 function crossCHCountryCupTriType(config) {
-    const { isFAI, totalDistFlown, closingDist } = config;
-    const isTri = closingDist <= 0.2 * totalDistFlown;
+    const { isFAI, totalDistFlown, gapDist } = config;
+    const isTri = gapDist <= 0.2 * totalDistFlown;
     if (!isTri) {
         return null;
     }
@@ -308,12 +308,12 @@ exports.scoreCHCrossCountryCup = scoreCHCrossCountryCup;
  * @param config Triangle type function config.
  */
 function worldXContestTriType(config) {
-    const { isFAI, totalDistFlown, closingDist } = config;
-    const isTri = closingDist <= 0.2 * totalDistFlown;
+    const { isFAI, totalDistFlown, gapDist } = config;
+    const isTri = gapDist <= 0.2 * totalDistFlown;
     if (!isTri) {
         return null;
     }
-    const isClosed = closingDist <= 0.05 * totalDistFlown;
+    const isClosed = gapDist <= 0.05 * totalDistFlown;
     if (isClosed && isFAI) {
         return {
             flightType: "closedFAITri" /* ClosedFAITri */,

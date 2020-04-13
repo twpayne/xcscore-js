@@ -20,20 +20,19 @@ declare type Coord = any;
  */
 declare type DistFunc = (coord1: Coord, coord2: Coord) => number;
 /**
- * A distance and a multiplier.
+ * A scored flight. Note that the score is not necessariliy equal to the product
+ * of the distance and the multiplier due to rounding.
  */
-interface ScoreComponents {
-    dist: number;
-    multiplier: number;
-}
-/**
- * A scored flight. Contains a flight type, a distance, a multiplier, a rounded
- * score, and an array of coords. Note that the score is not necessariliy equal
- * to the product of the distance and the multiplier due to rounding.
- */
-interface FinalScore extends ScoreComponents {
+interface FinalScore {
+    /** Flight type. */
     flightType: FlightType;
+    /** Distance. */
+    dist: number;
+    /** Multipler. */
+    multiplier: number;
+    /** Rounded score. */
     score: number;
+    /** Coords. */
     coords: ReadonlyArray<Coord>;
 }
 /**
