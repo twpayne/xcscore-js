@@ -1,17 +1,17 @@
 declare const enum FlightType {
     None = "none",
-    ClosedFAITriangle = "closedFAITriangle",
-    ClosedFlatTriangle = "closedFlatTriangle",
-    FAITriangle = "faiTriangle",
-    FlatTriangle = "flatTriangle",
-    FreeDistance = "freeDistance",
-    OpenDistance = "openDistance",
-    StraightDistance = "straightDistance"
+    ClosedFAITri = "closedFAITri",
+    ClosedFlatTri = "closedFlatTri",
+    FAITri = "faiTri",
+    FlatTri = "flatTri",
+    FreeDist = "freeDist",
+    OpenDist = "openDist",
+    StraightDist = "straightDist"
 }
 declare type Coord = any;
-declare type DistanceFunc = (coord1: Coord, coord2: Coord) => number;
+declare type DistFunc = (coord1: Coord, coord2: Coord) => number;
 interface ScoreComponents {
-    distance: number;
+    dist: number;
     multiplier: number;
 }
 interface FinalScore extends ScoreComponents {
@@ -19,23 +19,23 @@ interface FinalScore extends ScoreComponents {
     score: number;
     coords: ReadonlyArray<Coord>;
 }
-export declare class DistanceMatrix {
+export declare class DistMatrix {
     readonly n: number;
-    readonly distances: ReadonlyArray<number>;
+    readonly dists: ReadonlyArray<number>;
     constructor(config: {
         coords: ReadonlyArray<Coord>;
-        distanceFunc: DistanceFunc;
+        distFunc: DistFunc;
     });
-    distanceBetween(i: number, j: number): number;
+    dist(i: number, j: number): number;
 }
-export declare let cartesianDistance: DistanceFunc;
+export declare let cartesianDist: DistFunc;
 export declare function scoreCrossCountryCup(config: {
     coords: ReadonlyArray<Coord>;
-    distanceKMFunc: DistanceFunc;
+    distKMFunc: DistFunc;
 }): FinalScore | null;
 export declare function scoreWorldXContest(config: {
     coords: ReadonlyArray<Coord>;
-    distanceKMFunc: DistanceFunc;
+    distKMFunc: DistFunc;
 }): FinalScore | null;
 export {};
 //# sourceMappingURL=index.d.ts.map
