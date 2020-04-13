@@ -21,7 +21,7 @@ jobs:
         git diff --exit-code
     - name: Generate docs
       run: |
-        npm run docs
+        npm run typedoc
         git diff # FIXME add --exit-code if/when typedoc generates repeatable output
     - uses: mooyoul/tslint-actions@v1.1.1
       with:

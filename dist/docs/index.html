@@ -62,10 +62,58 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#xcscore-js" id="xcscore-js" style="color: inherit; text-decoration: none;">
-					<h1>xcscore-js</h1>
+				<a href="#xcscore" id="xcscore" style="color: inherit; text-decoration: none;">
+					<h1>xcscore</h1>
 				</a>
-				<p>Cross country league scoring for paragliding.</p>
+				<p>Cross country league flight scoring for paragliding.</p>
+				<a href="#introduction" id="introduction" style="color: inherit; text-decoration: none;">
+					<h2>Introduction</h2>
+				</a>
+				<p>xcscore computes highest scoring flights from an array of coords. It is designed
+					for use in XC flight planning software like <a href="https://xcplanner.appspot.com">XC
+					Planner</a>. It uses crude brute-force algorithms
+					that support only a small number of coordinates and is not suitable for scoring
+				flights from GPS tracklogs.</p>
+				<a href="#api-overview" id="api-overview" style="color: inherit; text-decoration: none;">
+					<h2>API overview</h2>
+				</a>
+				<p>xcscore exports two functions:</p>
+				<ul>
+					<li><code>scoreWorldXContest</code> for scoring flights according to the World XContest
+					rules.</li>
+					<li><code>scoreCHCrossCountryCup</code> for scoring flights according to the Swiss Cross
+					Country Cup rules.</li>
+				</ul>
+				<p>Each function takes a single object as an argument with two properties:</p>
+				<ul>
+					<li><code>coords</code>: an array of coordinates.</li>
+					<li><code>distKMFunc</code>: a function that returns the distance in kilometers between two coordinates.</li>
+				</ul>
+				<p>Each function returns a single object describing the highest scoring flight
+				found with five properties:</p>
+				<ul>
+					<li><code>flightType</code>: the type of the flight, e.g. <code>&quot;openDist&quot;</code>, <code>&quot;flatTri&quot;</code>, or
+					<code>&quot;faiTri&quot;</code>. For a full list of flight types see the documentation.</li>
+					<li><code>dist</code>: the scoring distance of the flight.</li>
+					<li><code>multiplier</code>: the scoring multiplier for the type of flight.</li>
+					<li><code>score</code>: the score of the flight. Note that this is not necessarily equal to
+					the product of <code>dist</code> and <code>multiplier</code> due to rounding rules.</li>
+					<li><code>coords</code>: the coordinates of the start, up to three turnpoints, and end of the
+					scoring part of the flight.</li>
+				</ul>
+				<p>If no scoring flight can be found (e.g. because there are fewer than two input
+					coords) then the returned object will have <code>flightType</code> <code>&quot;none&quot;</code>, <code>dist</code>,
+				<code>multiplier</code>, and <code>score</code> <code>0</code>, and <code>coords</code> <code>[]</code>.</p>
+				<p>For a full description of the API, consult the documentation in the <code>dist/docs</code>
+				directory.</p>
+				<a href="#use-with-leafletjs" id="use-with-leafletjs" style="color: inherit; text-decoration: none;">
+					<h2>Use with LeafletJS</h2>
+				</a>
+				<p>If you&#39;re using <a href="https://leafletjs.com/">LeafletJS</a> then you <code>coords</code> can be an
+				array of <code>LatLng</code>s and you can use the following function as <code>distKMFunc</code>:</p>
+				<pre><code class="language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">distKM</span>(<span class="hljs-params">latLng1, latLng2</span>) </span>{
+    <span class="hljs-keyword">return</span> latLng1.distanceTo(latLng2)/<span class="hljs-number">1000</span>;
+}</code></pre>
 				<a href="#license" id="license" style="color: inherit; text-decoration: none;">
 					<h2>License</h2>
 				</a>
