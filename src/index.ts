@@ -310,8 +310,8 @@ function scoreTris(config: {
 }
 
 /**
- * Return a FinalScore from the best interimScore from interimScores by applying
- * roundScoreFunc and looking up coord indexes in coords.
+ * Return a final score from the best interimScore from interimScores by
+ * applying roundScoreFunc and looking up coord indexes in coords.
  *
  * @param config.interimScores Interim scores.
  * @param config.roundScoreFunc Score rounding function.
