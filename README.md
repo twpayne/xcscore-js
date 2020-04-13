@@ -56,7 +56,7 @@ library.
 function as `distKMFunc`:
 
 ```javascript
-func diskKM(latLng1, latLng2) {
+function distKM(latLng1, latLng2) {
     return google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2, 6371);
 }
 ```
