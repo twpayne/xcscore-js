@@ -9,7 +9,7 @@ function cartesianDist(coord1, coord2){
 
 var suite = new Benchmark.Suite;
 
-suite.add('13 points, XContest', function() {
+suite.add('scoreWorldXContest, 13 coords', function() {
 	const score = xcscore.scoreWorldXContest({
 		coords: [
 			[6, 0],
@@ -29,9 +29,9 @@ suite.add('13 points, XContest', function() {
 		distKMFunc: cartesianDist,
 	});
 	if (score.flightType != "closedFAITri" || score.score != 51.2) {
-		throw new Error("Bad result")
+		throw new Error("Bad result");
 	}
-}).add('13 points, CCC', function() {
+}).add('scoreCHCrossCountryCup, 13 coords', function() {
 	const score = xcscore.scoreCHCrossCountryCup({
 		coords: [
 			[6, 0],
@@ -51,7 +51,35 @@ suite.add('13 points, XContest', function() {
 		distKMFunc: cartesianDist,
 	});
 	if (score.flightType != "faiTri" || score.score != 41.6) {
-		throw new Error("Bad result")
+		throw new Error("Bad result");
+	}
+}).add('scoreCHCrossCountryCup, 25 coords', function() {
+	const n = 25;
+	let coords = [];
+	for (let x = 0; x < n; ++x) {
+		coords.push([x, 0]);
+	}
+	const score = xcscore.scoreCHCrossCountryCup({
+		coords,
+		distKMFunc: cartesianDist,
+	});
+	if (score.flightType != "straightDist" || score.dist != n - 1) {
+		console.log(score)
+		throw new Error("Bad result");
+	}
+}).add('scoreCHCrossCountryCup, 50 coords', function() {
+	const n = 50;
+	let coords = [];
+	for (let x = 0; x < n; ++x) {
+		coords.push([x, 0]);
+	}
+	const score = xcscore.scoreCHCrossCountryCup({
+		coords,
+		distKMFunc: cartesianDist,
+	});
+	if (score.flightType != "straightDist" || score.dist != n - 1) {
+		console.log(score)
+		throw new Error("Bad result");
 	}
 }).on('cycle', function(event) {
    console.log(String(event.target));
