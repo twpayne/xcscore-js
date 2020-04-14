@@ -1,7 +1,7 @@
 import {
     scoreCHCrossCountryCup,
     scoreWorldXContest,
-} from ".";
+} from "../src/index";
 
 type CartesianCoord = [number, number];
 
