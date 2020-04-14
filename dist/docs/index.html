@@ -118,7 +118,7 @@
 				</a>
 				<p><code>coords</code> can be an array of <code>google.maps.LatLng</code>s and you can use the following
 				function as <code>distKMFunc</code>:</p>
-				<pre><code class="language-javascript">func diskKM(latLng1, latLng2) {
+				<pre><code class="language-javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">distKM</span>(<span class="hljs-params">latLng1, latLng2</span>) </span>{
     <span class="hljs-keyword">return</span> google.maps.geometry.spherical.computeDistanceBetween(latLng1, latLng2, <span class="hljs-number">6371</span>);
 }</code></pre>
 				<a href="#leafletjs" id="leafletjs" style="color: inherit; text-decoration: none;">
