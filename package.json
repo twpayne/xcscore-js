@@ -1,6 +1,6 @@
 {
   "name": "@twpayne/xcscore",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Cross country league scoring for paragliding",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
