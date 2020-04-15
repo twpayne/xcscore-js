@@ -1,9 +1,10 @@
+name: CI
 on:
   pull_request:
   push:
 jobs:
   build:
-    name: Build
+    name: Build and test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,11 +16,11 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm Clean Install
+    - name: Clean install
       run: |
         npm ci
         git diff --exit-code
-    - name: Run Tests
+    - name: Run tests
       run: npm test
       env:
         CI: true
@@ -31,7 +32,8 @@ jobs:
       run: |
         npm run typedoc
         git diff # FIXME add --exit-code if/when typedoc generates repeatable output
-    - uses: mooyoul/tslint-actions@v1.1.1
+    - name: Lint
+      uses: mooyoul/tslint-actions@v1.1.1
       with:
         pattern: '*.ts'
         token: ${{ secrets.GITHUB_TOKEN }}
