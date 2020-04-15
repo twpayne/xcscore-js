@@ -1,18 +1,11 @@
 import {
+    FlightType,
     scoreCHCrossCountryCup,
     scoreWorldXContest,
 } from "../src/index";
-
-type CartesianCoord = [number, number];
-
-function cartesianDist(
-    coord1: CartesianCoord,
-    coord2: CartesianCoord,
-): number {
-    const deltaX = coord1[0]-coord2[0];
-    const deltaY = coord1[1]-coord2[1];
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-}
+import {
+	cartesianDist,
+} from './cartesian';
 
 describe("scoreCHCrossCountryCup", () => {
     test("no coords, none", () => {
@@ -21,7 +14,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "none",
+            flightType: FlightType.None,
             dist: 0,
             multiplier: 0,
             score: 0,
@@ -37,7 +30,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "none",
+            flightType: FlightType.None,
             dist: 0,
             multiplier: 0,
             score: 0,
@@ -54,7 +47,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "straightDist",
+            flightType: FlightType.StraightDist,
             dist: 1,
             multiplier: 1.2,
             score: 1.2,
@@ -75,7 +68,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "straightDist",
+            flightType: FlightType.StraightDist,
             dist: 2,
             multiplier: 1.2,
             score: 2.4,
@@ -96,7 +89,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "flatTri",
+            flightType: FlightType.FlatTri,
             dist: 5,
             multiplier: 1.2,
             score: 6,
@@ -121,7 +114,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "straightDist",
+            flightType: FlightType.StraightDist,
             dist: 3,
             multiplier: 1.2,
             score: 3.6,
@@ -143,7 +136,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "freeDist",
+            flightType: FlightType.FreeDist,
             dist: 15,
             multiplier: 1,
             score: 15,
@@ -168,7 +161,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "flatTri",
+            flightType: FlightType.FlatTri,
             dist: 5,
             multiplier: 1.2,
             score: 6,
@@ -193,7 +186,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "freeDist",
+            flightType: FlightType.FreeDist,
             dist: 6,
             multiplier: 1,
             score: 6,
@@ -218,7 +211,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "faiTri",
+            flightType: FlightType.FAITri,
             dist: 15,
             multiplier: 1.3,
             score: 19.5,
@@ -243,7 +236,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "freeDist",
+            flightType: FlightType.FreeDist,
             dist: 13,
             multiplier: 1,
             score: 13,
@@ -269,7 +262,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "straightDist",
+            flightType: FlightType.StraightDist,
             dist: 4,
             multiplier: 1.2,
             score: 4.8,
@@ -292,7 +285,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "freeDist",
+            flightType: FlightType.FreeDist,
             dist: 20,
             multiplier: 1,
             score: 20,
@@ -318,7 +311,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "flatTri",
+            flightType: FlightType.FlatTri,
             dist: 16,
             multiplier: 1.2,
             score: 19.2,
@@ -344,7 +337,7 @@ describe("scoreCHCrossCountryCup", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "faiTri",
+            flightType: FlightType.FAITri,
             dist: 14,
             multiplier: 1.3,
             score: 18.2,
@@ -366,7 +359,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "none",
+            flightType: FlightType.None,
             dist: 0,
             multiplier: 0,
             score: 0,
@@ -382,7 +375,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "none",
+            flightType: FlightType.None,
             dist: 0,
             multiplier: 0,
             score: 0,
@@ -399,7 +392,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 1,
             multiplier: 1,
             score: 1,
@@ -420,7 +413,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 2,
             multiplier: 1,
             score: 2,
@@ -444,7 +437,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "flatTri",
+            flightType: FlightType.FlatTri,
             dist: 5,
             multiplier: 1.2,
             score: 6,
@@ -468,7 +461,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "closedFlatTri",
+            flightType: FlightType.ClosedFlatTri,
             dist: 6,
             multiplier: 1.4,
             score: 8.4,
@@ -493,7 +486,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 3,
             multiplier: 1,
             score: 3,
@@ -518,7 +511,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 15,
             multiplier: 1,
             score: 15,
@@ -543,7 +536,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "flatTri",
+            flightType: FlightType.FlatTri,
             dist: 5,
             multiplier: 1.2,
             score: 6,
@@ -568,7 +561,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "closedFlatTri",
+            flightType: FlightType.ClosedFlatTri,
             dist: 6,
             multiplier: 1.4,
             score: 8.4,
@@ -593,7 +586,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 6,
             multiplier: 1,
             score: 6,
@@ -618,7 +611,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "faiTri",
+            flightType: FlightType.FAITri,
             dist: 15,
             multiplier: 1.4,
             score: 21,
@@ -643,7 +636,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "closedFAITri",
+            flightType: FlightType.ClosedFAITri,
             dist: 16,
             multiplier: 1.6,
             score: 25.6,
@@ -668,7 +661,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 13,
             multiplier: 1,
             score: 13,
@@ -694,7 +687,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 4,
             multiplier: 1,
             score: 4,
@@ -720,7 +713,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "openDist",
+            flightType: FlightType.OpenDist,
             dist: 20,
             multiplier: 1,
             score: 20,
@@ -746,7 +739,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "flatTri",
+            flightType: FlightType.FlatTri,
             dist: 16,
             multiplier: 1.2,
             score: 19.2,
@@ -772,7 +765,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "closedFlatTri",
+            flightType: FlightType.ClosedFlatTri,
             dist: 18,
             multiplier: 1.4,
             score: 25.2,
@@ -798,7 +791,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "faiTri",
+            flightType: FlightType.FAITri,
             dist: 14,
             multiplier: 1.4,
             score: 19.6,
@@ -824,7 +817,7 @@ describe("scoreWorldXContest", () => {
             distKMFunc: cartesianDist,
         });
         expect(score).toStrictEqual({
-            flightType: "closedFAITri",
+            flightType: FlightType.ClosedFAITri,
             dist: 16,
             multiplier: 1.6,
             score: 25.6,

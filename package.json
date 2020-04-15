@@ -8,7 +8,7 @@
     "build": "tsc",
     "lint": "tslint -c tslint.json -p .",
     "test": "jest",
-    "benchmark": "node ./tests/benchmark.js",
+    "benchmark": "ts-node ./tests/benchmark.ts",
     "typedoc": "typedoc"
   },
   "repository": {
@@ -29,11 +29,13 @@
   },
   "homepage": "https://github.com/twpayne/xcscore-js#readme",
   "devDependencies": {
+    "@types/benchmark": "^1.0.31",
     "@types/jest": "^25.2.1",
     "@types/node": "^13.11.1",
     "benchmark": "^2.1.4",
     "jest": "^25.3.0",
     "ts-jest": "^25.3.1",
+    "ts-node": "^8.8.2",
     "tslint": "^6.1.1",
     "tslint-consistent-codestyle": "^1.16.0",
     "typedoc": "^0.17.4",

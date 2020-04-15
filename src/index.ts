@@ -1,7 +1,7 @@
 /**
  * A type of flight.
  */
-const enum FlightType {
+export const enum FlightType {
     None = "none",
     ClosedFAITri = "closedFAITri",
     ClosedFlatTri = "closedFlatTri",
@@ -160,7 +160,8 @@ function padCoords(
 /**
  * Return an interim score for the highest-scoring distance between any two
  * coords. It uses a brute force algorithm with a running time of O(N^2) when N
- * is the number of coords, and so should only be used with a few coords.
+ * is the number of coords, and so should only be used with a few tens of
+ * coords.
  *
  * @param config.distMatrix Distance matrix.
  */
@@ -191,7 +192,8 @@ function scoreStraightDist(config: {
 /**
  * Return an interim score for the highest-scoring distance via three
  * turnpoints. It uses a brute force algorithm with a running time of O(N^5)
- * when N is the number of coords, and so should only be used with a few coords.
+ * when N is the number of coords, and so should only be used with a few tens of
+ * coords.
  *
  * @param config.flightType The type of returned flight.
  * @param config.distMatrix Distance matrix.
@@ -269,7 +271,7 @@ type TriTypeFunc = (config: TriTypeFuncConfig) => TriType;
  * Return an interim score for the highest-scoring triangle flight according to
  * triTypeFunc, or null if there are no triangles. This uses a brute force
  * algorithm with a running time of O(N^5) when N is the number of coords, and
- * so should only be used for a few coords.
+ * so should only be used for a few tens of coords.
  *
  * @param config.distMatrix Distance matrix.
  * @param config.tryTypeFunc Function to determine whether a flight is a

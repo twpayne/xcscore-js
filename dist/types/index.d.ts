@@ -1,7 +1,7 @@
 /**
  * A type of flight.
  */
-declare const enum FlightType {
+export declare const enum FlightType {
     None = "none",
     ClosedFAITri = "closedFAITri",
     ClosedFlatTri = "closedFlatTri",
