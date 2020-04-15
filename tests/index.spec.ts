@@ -3,17 +3,9 @@ import {
     scoreCHCrossCountryCup,
     scoreWorldXContest,
 } from "../src/index";
-
-type CartesianCoord = [number, number];
-
-function cartesianDist(
-    coord1: CartesianCoord,
-    coord2: CartesianCoord,
-): number {
-    const deltaX = coord1[0]-coord2[0];
-    const deltaY = coord1[1]-coord2[1];
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-}
+import {
+	cartesianDist,
+} from './cartesian';
 
 describe("scoreCHCrossCountryCup", () => {
     test("no coords, none", () => {

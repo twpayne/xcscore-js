@@ -4,20 +4,12 @@ import {
     scoreCHCrossCountryCup,
     scoreWorldXContest,
 } from "../src/index";
-
-type CartesianCoord = [number, number];
-
-function cartesianDist(
-    coord1: CartesianCoord,
-    coord2: CartesianCoord,
-): number {
-    const deltaX = coord1[0]-coord2[0];
-    const deltaY = coord1[1]-coord2[1];
-    return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-}
+import {
+	CartesianCoord,
+	cartesianDist,
+} from './cartesian';
 
 const suite = new Benchmark.Suite();
-
 suite.add('scoreWorldXContest, 13 coords', () => {
 	const score = scoreWorldXContest({
 		coords: [
@@ -89,7 +81,8 @@ suite.add('scoreWorldXContest, 13 coords', () => {
 		throw new Error("Bad result");
 	}
 }).on('cycle', (event: any) => {
-   console.log(String(event.target));
+	// tslint:disable-next-line:no-console
+	console.log(String(event.target));
 }).run({
 	async: true,
 });
