@@ -311,7 +311,7 @@ function scoreCHCrossCountryCup(config) {
             coords: [],
         };
     }
-    // If there are only two coors, then there is only straight distance.
+    // If there are only two coords, then there is only straight distance.
     if (coords.length === 2) {
         const dist = distKMFunc(coords[0], coords[1]);
         return {
@@ -410,7 +410,7 @@ function scoreWorldXContest(config) {
             coords: [],
         };
     }
-    // If there are only two coors, then there is only open distance.
+    // If there are only two coords, then there is only open distance.
     if (coords.length === 2) {
         const dist = distKMFunc(coords[0], coords[1]);
         return {
