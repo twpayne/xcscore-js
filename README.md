@@ -7,7 +7,7 @@ Cross country league flight scoring for paragliding.
 xcscore computes the highest scoring flight from an array of coords according to
 the World XContest and Swiss Cross Country Cup rules. It is designed for use in
 XC flight planning software like [XC Planner](https://xcplanner.appspot.com). It
-uses crude brute-force algorithms that support only a small number of
+uses crude brute force algorithms that support only a small number of
 coordinates and is not suitable for scoring flights from GPS tracklogs.
 
 ## API overview
@@ -43,6 +43,21 @@ coords) then the returned object will have `flightType` `"none"`, `dist`,
 
 For a full description of the API, consult the documentation in the `dist/docs`
 directory.
+
+## Performance
+
+xcscore uses simple brute force algorithms for implementation simplicity and
+minimal code size. CPU usage increases with O(N^5) and memory usage with O(N^2) so
+xscore is heavily CPU bound.
+
+The package includes benchmarks to measure performance, the results of which
+depend heavily on the CPU. As a rough guide, 25 coords is fine on any machine
+(scored in approximately less than 2ms on a single core of a 2014-era MacBook
+Pro), whereas 50 coords is a reasonable upper limit (taking 60ms on the same
+machine).
+
+More sophisticated algorithms are used for scoring real GPS tracklogs with tens
+of thousands of points. Contact the author for details.
 
 ## Use with popular JavaScript mapping libraries
 
