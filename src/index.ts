@@ -81,7 +81,7 @@ interface FinalScore {
  * is strictly triangular, only the upper triangular matrix excluding the
  * diagonal is stored.
  */
-class DistMatrix {
+export class DistMatrix {
     readonly n: number;
     readonly dists: ReadonlyArray<number>;
 

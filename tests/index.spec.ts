@@ -1,4 +1,5 @@
 import {
+    DistMatrix,
     FlightType,
     scoreCHCrossCountryCup,
     scoreWorldXContest,
@@ -6,6 +7,33 @@ import {
 import {
 	cartesianDist,
 } from './cartesian';
+
+describe("distMatrix", () => {
+    describe("simple", () => {
+        const distMatrix = new DistMatrix({
+            coords: [
+                [0, 0],
+                [0, 1],
+                [0, 2],
+            ],
+            distFunc: cartesianDist,
+        })
+        test("member varaibles", () => {
+            expect(distMatrix.n).toBe(3);
+            expect(distMatrix.dists).toStrictEqual([1, 2, 1]);
+        })
+        test.each([
+            [0, 0, 0],
+            [0, 1, 1],
+            [0, 2, 2],
+            [1, 1, 0],
+            [1, 2, 1],
+            [2, 2, 0],
+        ])("dist(%i, %i)", (i, j, expected) => {
+            expect(distMatrix.dist(i, j)).toBe(expected);
+        });
+    })
+})
 
 describe("scoreCHCrossCountryCup", () => {
     test("no coords, none", () => {
