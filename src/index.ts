@@ -440,7 +440,7 @@ export function scoreCHCrossCountryCup(config: {
 }): FinalScore {
     const { coords, distKMFunc } = config;
 
-    // If there are one or two coords, then there is no distance and no score.
+    // If there are zero or one coords, then there is no distance and no score.
     if (coords.length < 2) {
         return {
             flightType: FlightType.None,
